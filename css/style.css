@@ -1,0 +1,24 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    height:100svh; 
+    background: #444
+}
+
+#map {
+    height: 100%;
+    width:100%;
+    position: relative;
+}
+
+#myCanvas{
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+}
