@@ -37,11 +37,15 @@
 
    
 // ::: Map move ::: 
-    map.on('move' , onMapMove); 
+    map.on('move' , ()=> {
+        onMapMove(app);
+    }); 
 
 
 // :::: Canvas Loop  ::::
-    app.ticker.add(update);
+    app.ticker.add(()=> {
+        update(app);
+    });
 
 })();
 
