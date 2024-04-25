@@ -1,4 +1,4 @@
-let initialZoom = 8;
+let initialZoom = 5;
 
 let southWest = L.latLng(52.500440,2.250475),
     northEast = L.latLng(70.740996,37.848053),

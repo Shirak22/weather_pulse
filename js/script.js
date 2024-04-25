@@ -10,6 +10,7 @@
 // create beautiful UI
 
 
+
 (async () => {
     // :: Get Data ::
     let data = await getData();
@@ -30,21 +31,25 @@
 
     app.view.setAttribute("id", "myCanvas");
     document.getElementById("map").appendChild(app.canvas);
+    
+    // ::: Get all textures :::
+    let {pointTexture} = await getAssets(); 
 
-// :::: Canvas Drawing  ::::
-
-    setup(app,getAssets);
-
+    // :::: Canvas Drawing  ::::
+   let particleEffect = new Effect(app,pointTexture);
+       particleEffect.init();
+       particleEffect.stage();
+        
    
 // ::: Map move ::: 
-    map.on('move' , ()=> {
-        onMapMove(app);
+    map.on('moveend' , ()=> {
+        particleEffect.reset();
     }); 
 
 
 // :::: Canvas Loop  ::::
     app.ticker.add(()=> {
-        update(app);
+        particleEffect.update();
     });
 
 })();
