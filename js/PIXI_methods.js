@@ -6,7 +6,9 @@ const {
     Text,
     Graphics,
     Container,
-    Assets
+    Assets,
+    Point,
+    MeshRope
 
 
     

@@ -1,103 +1,89 @@
-class Particle extends Sprite{
-    constructor(Effect){
-        super(Effect.texture);
+class Particle extends MeshRope {
+    constructor(Effect, points) {
+        super({
+            texture: Effect.texture,
+            points:Effect.points,
+        });
         this.effect = Effect;
-        this.texture = this.effect.texture; 
-        this.x; 
-        this.y;
-        this.vx = this.effect.particlesSpeedX;
-        this.vy = this.effect.particlesSpeedY; 
-        this.anchor.set(.5); 
-        this.tint = this.effect.particlesColor; 
-        this.scale.set(this.effect.particlesScale);
-        this.rotation = 0;
-        this.history = [{x:this.x ,y:this.y}]; 
-        this.line = new Graphics();
-        this.effect.app.stage.addChild(this.line);
-        this.count = 0; 
+        this.posx = 0;
+        this.posy = 0;
+        this.vx = 10;
+        this.vy = 1;
+        this.history = []; 
     }
+    
 
-    update(){
-        this.x += this.vx ; 
-        this.y += this.vy ;
-        this.count++; 
 
-        if(this.x > this.effect.width || this.x < 0 ) this.vx *= -1 ; 
-        if(this.y > this.effect.height || this.y < 0 ) this.vy *= -1 ; 
-        if(this.count > 2){
-            this.history.push({x:this.x , y:this.y });
-            this.count = 0; 
-        }
 
-        if(this.history.length > 10) {
-            this.history.shift();
-        }
-        
-        this.updateTrail();
-    }
 
-    drawTrail(){
-        this.line.clear();
-        this.line.moveTo(this.history[0].x, this.history[0].y);
-        for (let i = 0; i < this.history.length; i++) {
-            this.line.lineTo(this.history[i].x , this.history[i].y);
-            
-            this.line.stroke({width:10, color: 0xff0000,alpha:i/this.history.length})            
-        }
-    }
 
-    updateTrail(){
-        this.drawTrail();
-    }
-   
 
 }
 
 
 
 class Effect {
-    constructor(app,texture){
-        this.app = app; 
-        this.height = this.app.screen.height; 
-        this.width = this.app.screen.width; 
+    constructor(app, texture) {
+        this.app = app;
+        this.height = this.app.screen.height;
+        this.width = this.app.screen.width;
         this.texture = texture;
-        this.particlesColor = "#ff0055"; 
-        this.particlesScale = 2 ; 
-        this.particlesSpeedX = 2; 
-        this.particlesSpeedY = 2; 
-        this.particles = new Container();
-        this.numberOfParticles = 10; 
-    }   
+        this.points = []; 
+        this.numOfParticles = 2;
+        this.container = new Container();
+        this.count = 0; 
+
+    }
 
 
-    init(){
-        for (let i = 0; i < this.numberOfParticles; i++) {
-                let particle = new Particle(this); 
-                particle.x = Math.random() * this.width;
-                particle.y  = Math.random() * this.height; 
-                this.particles.addChild(particle);            
-            }
+
+    init() {
+
+        //generate particles and its mesh points, then add them to the stage to render render them on the screen. 
+        // push points to point array; 
+        for(let point = 0; point < 10; point++){
+            this.points.push(new Point((256/10) * point,0));
+        }
+
+        this.generateParticles();
+
+        this.app.stage .addChild(this.container);
+
 
 
     }
 
-    update(){
-        for (let i = 0; i < this.numberOfParticles; i++) {
-         let particle = this.particles.children[i]; 
-         particle.update();
-         particle.updateTrail();
+
+    generateParticles() {
+        //push to particles to container  
+        for (let i = 0; i < this.numOfParticles; i++) {
+            let particle = new Particle(this);
+            particle.position.set(Math.random()* this.app.screen.width,Math.random()* this.app.screen.width);
+            particle.visible = true;
+            particle.alpha = 1; 
+            this.container.addChild(particle);
+        }
 
     }
 
+
+
+
+
+    update() {   
+        this.count += .1 ; 
+        if(this.count > 6) this.count = 0; 
+        this.container.children.forEach(particle => {
+            particle.geometry.points.forEach((point,index) => {
+                    point.y = Math.sin(this.count * index) *10; 
+            });
+        });
     }
 
-    reset(){
-       this.particles.removeChildren();
-       this.init();
-    }
+    reset() {
 
-    stage(){
-        this.app.stage.addChild(this.particles); 
     }
-    
 }
+
+
+

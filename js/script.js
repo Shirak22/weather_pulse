@@ -22,7 +22,7 @@
     let appParams = {
         width: mapSize.x,
         height: mapSize.y,
-        backgroundAlpha:0,
+        backgroundAlpha:.5,
 
     }
 
@@ -33,12 +33,11 @@
     document.getElementById("map").appendChild(app.canvas);
     
     // ::: Get all textures :::
-    let {pointTexture} = await getAssets(); 
+    let {pointTexture, trailTexture} = await getAssets(); //getAssets() in js/textures.js
 
     // :::: Canvas Drawing  ::::
-   let particleEffect = new Effect(app,pointTexture);
+   let particleEffect = new Effect(app,trailTexture); // js/Particle.js
        particleEffect.init();
-       particleEffect.stage();
         
    
 // ::: Map move ::: 
