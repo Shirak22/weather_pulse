@@ -2,20 +2,55 @@ class Particle extends MeshRope {
     constructor(Effect, points) {
         super({
             texture: Effect.texture,
-            points:Effect.points,
+            points
         });
         this.effect = Effect;
-        this.posx = 0;
-        this.posy = 0;
         this.vx = 10;
         this.vy = 1;
         this.history = []; 
+
     }
     
 
+    pushHistory(x,y){
+        if(this.history.length > this.geometry.points.length){
+            this.history.shift();
+        }
+        this.history.push({x ,y}); 
+    }
 
 
 
+    update(){
+
+
+        let head = this.geometry.points[0]; 
+        let points = this.geometry.points; 
+        
+        head.x += this.vx ;
+        head.y += this.vy; 
+
+        if(head.x > this.effect.width || head.x < 0){
+            this.vx *= -1; 
+
+        }
+
+        if(head.y > this.effect.height || head.y < 0){
+            this.vy *= -1; 
+
+        }
+       
+        this.pushHistory(head.x, head.y);
+        if(this.history){
+
+            for(let p=1; p < points.length; p++){
+                points[p].x = this.history[p]?.x ;
+                points[p].y = this.history[p]?.y ;
+
+            }
+            
+        }
+    }
 
 
 }
@@ -29,24 +64,21 @@ class Effect {
         this.width = this.app.screen.width;
         this.texture = texture;
         this.points = []; 
-        this.numOfParticles = 2;
+        this.numOfParticles = 1;
         this.container = new Container();
-        this.count = 0; 
 
     }
 
 
 
-    init() {
-
+    init(points) {
         //generate particles and its mesh points, then add them to the stage to render render them on the screen. 
         // push points to point array; 
-        for(let point = 0; point < 10; point++){
-            this.points.push(new Point((256/10) * point,0));
+        for(let point = 0; point < 30; point++){
+            this.points.push(new Point((0,0)));
         }
 
         this.generateParticles();
-
         this.app.stage .addChild(this.container);
 
 
@@ -57,10 +89,7 @@ class Effect {
     generateParticles() {
         //push to particles to container  
         for (let i = 0; i < this.numOfParticles; i++) {
-            let particle = new Particle(this);
-            particle.position.set(Math.random()* this.app.screen.width,Math.random()* this.app.screen.width);
-            particle.visible = true;
-            particle.alpha = 1; 
+            let particle = new Particle(this,this.points.slice() ); // slice to make copy of the points array 
             this.container.addChild(particle);
         }
 
@@ -71,12 +100,10 @@ class Effect {
 
 
     update() {   
-        this.count += .1 ; 
-        if(this.count > 6) this.count = 0; 
+
         this.container.children.forEach(particle => {
-            particle.geometry.points.forEach((point,index) => {
-                    point.y = Math.sin(this.count * index) *10; 
-            });
+            particle.update();
+
         });
     }
 
