@@ -41,6 +41,9 @@ class Particle extends MeshRope {
         }
        
         this.pushHistory(head.x, head.y);
+
+        // bug::: the movement is not correct here.. 
+         
         if(this.history){
 
             for(let p=1; p < points.length; p++){
@@ -89,6 +92,8 @@ class Effect {
     generateParticles() {
         //push to particles to container  
         for (let i = 0; i < this.numOfParticles; i++) {
+            // !warning:::  the points need to be unique for every particle. 
+
             let particle = new Particle(this,this.points.slice() ); // slice to make copy of the points array 
             this.container.addChild(particle);
         }
