@@ -8,8 +8,6 @@ const {
     Container,
     Assets,
     Point,
-    MeshRope
-
-
+    MeshRope,
     
 } = PIXI; 
