@@ -46,6 +46,7 @@ class Particle extends MeshRope {
 
 
     update(delta){
+            
         this.points[this.trailHead].x += this.velocity.x * delta;
         this.points[this.trailHead].y += this.velocity.y * delta;
         this.positionHistory();

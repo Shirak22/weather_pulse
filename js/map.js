@@ -19,4 +19,9 @@ let tile = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 const mapSize = map.getSize();
 
+function toPixel(coordinates){
+    return  map.latLngToLayerPoint(coordinates);
+}
+
+
 

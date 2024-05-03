@@ -1,6 +1,4 @@
-let emitter; 
-let trailTexture; 
-
+let emitter;  
 
     // --Get SMHI data 
     // --get the geo boundries 
@@ -13,14 +11,12 @@ let trailTexture;
 
 
 // setup function called one time in script.js here goes all the initializations  
-async function setup(app,texture){
-    console.log(":::setup:::");     
-
-    trailTexture = texture;
-    emitter = new Emitter(trailTexture,app.screen.width, app.screen.height);
+async function setup({app,data,textures}){
+    console.log('%c :::Setup::: ', 'font-weight: bold; color: #ff0055');
 
 
-    emitter.init();
+    emitter = new Emitter(textures.trailTexture,app.screen.width, app.screen.height);
+    emitter.init(data);
     emitter.addToStage(app);
 
 }
@@ -29,8 +25,8 @@ async function setup(app,texture){
 
 // the update function is the Ticker in PIXIJS, called frequently, here goes all the code that needs to be updated all the time. 
 function update(time,app){
-    console.log(":::update:::");
-    
+    console.log('%c :::Update::: ', 'font-weight: bold; color: #ff0055');
+
 
     emitter.update(time.deltaTime);
 }
@@ -38,11 +34,13 @@ function update(time,app){
 
 
 function onMapMove (){
-    console.log(":::on map move");
-
+    console.log('%c :::On map move::: ', 'font-weight: bold; color: #ff0055');
+        
+    emitter.updateData();
 }
 
 
 function onMapMoveEnd () {
-    console.log(":::on map move end ");
+    console.log('%c :::On map move end ::: ', 'font-weight: bold; color: #ff0055');
+
 }

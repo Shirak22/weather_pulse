@@ -29,9 +29,15 @@
     document.getElementById("map").appendChild(app.canvas);
 
     // ::: Get all textures :::
-    let {pointTexture, trailTexture} = await getAssets(); //getAssets() in js/textures.js
+    let textures = await getAssets(); //getAssets() in js/textures.js
 
-    await setup(app,trailTexture); 
+    let setupProps = {
+        textures, 
+        app,
+        data,
+    }
+
+    await setup(setupProps); 
 
 // ::: Map movments ::: 
     map.on('move' , ()=> {
