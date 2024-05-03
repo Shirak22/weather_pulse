@@ -4,7 +4,7 @@ const validTimes_URL = `https://opendata-download-metfcst.smhi.se/api/category/p
 
 const openData_settings = {
     parameter: "wd",
-    downSample: "4",
+    downSample: "40",
 }
 
 const getValidTimes = async ()=> {
@@ -27,8 +27,7 @@ const getData = async ()=> {
         wind_direction: data.timeSeries[0].parameters[0].values
     }; 
     return rasterPoints;
-
-
-
     
 }
+
+

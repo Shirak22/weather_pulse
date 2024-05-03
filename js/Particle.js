@@ -6,13 +6,12 @@ class Particle extends MeshRope {
         }); 
         this.emitter = Emitter; 
         this.points = points;
-
+        this.tint = this.emitter.tint; 
         this.velocity = {
             x:1 * Math.random()*10,
             y:1 * Math.random()*10
-        }; 
-
-        this.tint = 0xffffff;
+        };
+         
         this.trailHead = this.emitter.trailHead; 
         this.history = []; 
     }
@@ -25,6 +24,15 @@ class Particle extends MeshRope {
         }
     }
 
+    edges(){
+        if(this.points[this.trailHead].x > this.emitter.width || this.points[this.trailHead].x < 0){
+            this.velocity.x = -this.velocity.x;  
+        }
+        if(this.points[this.trailHead].y >  this.emitter.height || this.points[this.trailHead].y <  0){
+            this.velocity.y = -this.velocity.y;  
+        }
+    
+    }
 
     movePoints(){
         for (let i = 0; i < this.points.length; i++) {
@@ -38,7 +46,7 @@ class Particle extends MeshRope {
 
 
     update(delta){
-        this.points[this.trailHead].x += this.velocity.x * delta; 
+        this.points[this.trailHead].x += this.velocity.x * delta;
         this.points[this.trailHead].y += this.velocity.y * delta;
         this.positionHistory();
         this.movePoints();

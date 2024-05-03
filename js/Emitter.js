@@ -4,7 +4,7 @@ class Emitter {
         this.width = width; 
         this.height = height; 
         this.scaleFactor = 1 ; 
-        this.numOfParticles = 10 ; 
+        this.numOfParticles = 1 ; 
         this.numOfMeshPoints = 20; 
         this.tint = 0xff0055;
         this.pool = []; 
@@ -14,7 +14,6 @@ class Emitter {
     }
 
     init(){
-        console.log(":::init:::");  
         for (let i = 0; i < this.numOfParticles; i++) {
             let points = [];
             for (let j = 0; j < this.numOfMeshPoints; j++) {
@@ -26,14 +25,15 @@ class Emitter {
         }
     }
 
+    
 
     addToStage(app){
         app.stage.addChild(this.container); 
     }
 
     update(delta){
-        console.log(":::update:::");
         this.pool.forEach(particle => {
+            particle.edges();
             particle.update(delta);
         })        
     

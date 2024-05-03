@@ -14,9 +14,6 @@
 (async () => {
     // :: Get Data ::
     let data = await getData();
-    let windDirectionArray = data.wind_direction; 
-    let coordinates = data.coordinates; 
-    
     
     // ::::App initialization ::: 
     let appParams = {
@@ -30,38 +27,26 @@
 
     app.view.setAttribute("id", "myCanvas");
     document.getElementById("map").appendChild(app.canvas);
-    
+
     // ::: Get all textures :::
     let {pointTexture, trailTexture} = await getAssets(); //getAssets() in js/textures.js
 
-    let emitter  = new Emitter(trailTexture,app.screen.width, app.screen.height); 
+    await setup(app,trailTexture); 
 
-
-        emitter.init();
-        emitter.addToStage(app);
-
-
-
-
-    
-
-
-
-
-
-
-// ::: Map move ::: 
-    map.on('moveend' , ()=> {
-
-
+// ::: Map movments ::: 
+    map.on('move' , ()=> {
+        onMapMove();
     }); 
 
+    map.on('moveend' , ()=> {
+        onMapMoveEnd();
+    }); 
 
+    
 // :::: Canvas Loop  ::::
     app.ticker.add((time)=> {
-        emitter.update(time.deltaTime);
+         update(time,app);
     });
-
 })();
 
 
