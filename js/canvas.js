@@ -1,5 +1,6 @@
-let emitter;  
-
+let emitter;
+let points; 
+let ctx; 
     // --Get SMHI data 
     // --get the geo boundries 
     // --get the pixel boundries 
@@ -14,10 +15,23 @@ let emitter;
 async function setup({app,data,textures}){
     console.log('%c :::Setup::: ', 'font-weight: bold; color: #ff0055');
 
+    ctx = new Graphics();
 
+    boundPoint(ctx,southEast);
+    boundPoint(ctx,southWest);
+    boundPoint(ctx,northEast);
+    boundPoint(ctx,northWest);
+    ctx.fill();
+
+    app.stage.addChild(ctx); 
     emitter = new Emitter(textures.trailTexture,app.screen.width, app.screen.height);
     emitter.init(data);
     emitter.addToStage(app);
+    
+    // draw the coordinates 
+    points = new GeoPoints(textures.pointTexture, data,app);
+    points.draw(); 
+
 
 }
 
@@ -35,12 +49,24 @@ function update(time,app){
 
 function onMapMove (){
     console.log('%c :::On map move::: ', 'font-weight: bold; color: #ff0055');
-        
-    emitter.updateData();
+    points.update();
+    emitter.bounds();
+    ctx.clear();
+    boundPoint(ctx,southEast);
+    boundPoint(ctx,southWest);
+    boundPoint(ctx,northEast);
+    boundPoint(ctx,northWest);
+    ctx.fill(0xff0055);
 }
 
 
 function onMapMoveEnd () {
     console.log('%c :::On map move end ::: ', 'font-weight: bold; color: #ff0055');
 
+}
+
+function boundPoint(ctx,boundPoint){
+    let latlng = L.latLng(boundPoint.lat,boundPoint.lng); 
+    let bounds = map.latLngToContainerPoint(latlng);
+    ctx.circle(bounds.x,bounds.y,10);
 }

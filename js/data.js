@@ -4,7 +4,7 @@ const validTimes_URL = `https://opendata-download-metfcst.smhi.se/api/category/p
 
 const openData_settings = {
     parameter: "wd",
-    downSample: "40",
+    downSample: config.general_settings.data.downSample,
 }
 
 const getValidTimes = async ()=> {

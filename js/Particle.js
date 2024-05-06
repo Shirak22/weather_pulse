@@ -8,12 +8,18 @@ class Particle extends MeshRope {
         this.points = points;
         this.tint = this.emitter.tint; 
         this.velocity = {
-            x:1 * Math.random()*10,
-            y:1 * Math.random()*10
+            x:5,
+            y:5 
         };
-         
+        this.maxLife = Math.floor(Math.random()*200 + 100); 
+        this.pos = {
+            x:Math.random()* this.emitter.width, 
+            y:Math.random()* this.emitter.height
+        }
         this.trailHead = this.emitter.trailHead; 
         this.history = []; 
+        this.points[this.trailHead].x = this.pos.x;
+        this.points[this.trailHead].y = this.pos.y;
     }
 
 
@@ -26,7 +32,7 @@ class Particle extends MeshRope {
 
     edges(){
         if(this.points[this.trailHead].x > this.emitter.width || this.points[this.trailHead].x < 0){
-            this.velocity.x = -this.velocity.x;  
+            this.maxLife = 0;
         }
         if(this.points[this.trailHead].y >  this.emitter.height || this.points[this.trailHead].y <  0){
             this.velocity.y = -this.velocity.y;  
@@ -46,12 +52,26 @@ class Particle extends MeshRope {
 
 
     update(delta){
-            
-        this.points[this.trailHead].x += this.velocity.x * delta;
-        this.points[this.trailHead].y += this.velocity.y * delta;
+        this.maxLife -= 10; 
+
+        let angle = bilinearInterpolation(this.points[this.trailHead].x,this.points[this.trailHead].y,this.emitter.data); 
+            // console.log(angle);
+        this.points[this.trailHead].x += this.velocity.x * delta * Math.cos(radians(angle));
+        this.points[this.trailHead].y += this.velocity.y * delta * Math.sin(radians(angle));
+
+        // this.points[this.trailHead].x += this.velocity.x * delta ;
+        // this.points[this.trailHead].y += this.velocity.y * delta ;
         this.positionHistory();
         this.movePoints();
+        if(this.maxLife < 0 ){
+            this.visible = false;
+            this.points[this.trailHead].x = Math.random()* this.emitter.width;
+            this.points[this.trailHead].y = Math.random()* this.emitter.height;
+            this.maxLife = 255; 
+        }
+      
 
+        this.visible = true;
     }
 
 

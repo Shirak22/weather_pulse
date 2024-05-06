@@ -6,8 +6,8 @@ class Emitter {
         this.container = new Container();
         this.data; 
         this.scaleFactor = 1 ; 
-        this.numOfParticles = 2 ; 
-        this.numOfMeshPoints = 10; 
+        this.numOfParticles = config.windParticles.numOfParticles ; 
+        this.numOfMeshPoints = config.windParticles.numOfMeshPoints; 
         this.tint = 0xff0055;
         this.trailHead = this.numOfMeshPoints - 1; 
 
@@ -23,10 +23,25 @@ class Emitter {
             let particle = new Particle(this,points); 
             this.container.addChild(particle); 
         }
+
+        this.bounds();
+
+    }
+
+    bounds(){
+        // 
+         let NE = L.latLng(northEast.lat,northEast.lng); 
+         let NEP = map.latLngToContainerPoint(NE);
+
+         let NW = L.latLng(northWest.lat,northWest.lng); 
+         let NWP = map.latLngToContainerPoint(NW);
+
+        this.width = NEP.x;
+
+        console.log(this.width);
     }
 
     updateData(){
-        console.log(this.data)
         let pixel = this.data.coordinates.map(coord => {
             return toPixel(coord);
         });    
@@ -42,8 +57,10 @@ class Emitter {
 
 
     update(delta){
+        this.updateData();
+        
         this.container.children.forEach(particle => {
-            particle.edges();
+            // particle.edges();
             particle.update(delta);
         })        
     
