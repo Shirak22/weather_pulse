@@ -13,9 +13,6 @@ class Particle extends MeshRope {
             y:1 
         };
 
-
-      
-
         this.trailHead = this.emitter.trailHead; 
         this.history = []; 
 
@@ -56,6 +53,13 @@ class Particle extends MeshRope {
     }
 
 
+    resetHistory(){
+        for (let i = 0; i < this.history.length; i++) {
+            this.history[i].x =  this.points[this.trailHead].x; 
+            this.history[i].y =  this.points[this.trailHead].y ; 
+
+        }
+    }
 
 
 
@@ -72,12 +76,12 @@ class Particle extends MeshRope {
         if (!this.insideBounds) {
             this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A);
             this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A);
+            this.resetHistory();
+            
         }
 
         this.positionHistory();
         this.movePoints();
-
-
    
     }
 

@@ -24,7 +24,7 @@ var config = {
         }
     },
     windParticles: {
-            numOfParticles: 1000,
+            numOfParticles: 2000,
             numOfMeshPoints:10,
     }
 }
