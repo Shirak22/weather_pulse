@@ -1,0 +1,11 @@
+2024-05-07
+to do list --> 
+
+
+    +Fix the position White line rendering issue 
+    +create age for every particle with fade in, fade out effect. 
+    +make  a reset method for the emitter. to be resat after map move or scroll. 
+    +create screen boundries to make the render in screen bounds. 
+
+
+::: TODO ::: 

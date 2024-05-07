@@ -8,37 +8,52 @@ class Emitter {
         this.scaleFactor = 1 ; 
         this.numOfParticles = config.windParticles.numOfParticles ; 
         this.numOfMeshPoints = config.windParticles.numOfMeshPoints; 
-        this.tint = 0xff0055;
+        this.tint = 0xffffff;
         this.trailHead = this.numOfMeshPoints - 1; 
 
+        this.verticalBounds = {
+            A: 0, 
+            B: 0
+        }
+        this.horizontalBounds = {
+            A:0,
+            B:0
+        }
     }
 
     init(data){
         this.data = data;
+        this.getBoundries();
         for (let i = 0; i < this.numOfParticles; i++) {
             let points = [];
             for (let j = 0; j < this.numOfMeshPoints; j++) {
-                points.push(new Point(j*5,0)); 
+                points.push(new Point(0,0)); 
             }
             let particle = new Particle(this,points); 
             this.container.addChild(particle); 
         }
 
-        this.bounds();
 
     }
 
-    bounds(){
-        // 
+    getBoundries(){
+         // get the Geo points area bounds, pnp 
          let NE = L.latLng(northEast.lat,northEast.lng); 
          let NEP = map.latLngToContainerPoint(NE);
 
          let NW = L.latLng(northWest.lat,northWest.lng); 
          let NWP = map.latLngToContainerPoint(NW);
 
-        this.width = NEP.x;
+         let SE = L.latLng(southEast.lat,southEast.lng); 
+         let SEP = map.latLngToContainerPoint(SE);
 
-        console.log(this.width);
+         let SW = L.latLng(southWest.lat,southWest.lng); 
+         let SWP = map.latLngToContainerPoint(SW);
+
+        this.verticalBounds.A = NWP.x ; 
+        this.verticalBounds.B = NEP.x ;
+        this.horizontalBounds.A = NWP.y ;  
+        this.horizontalBounds.B = SWP.y ;
     }
 
     updateData(){
@@ -49,6 +64,8 @@ class Emitter {
             ...this.data,
             pixel
         }
+
+
     }
 
     addToStage(app){
@@ -58,10 +75,12 @@ class Emitter {
 
     update(delta){
         this.updateData();
-        
+        this.getBoundries();
+
         this.container.children.forEach(particle => {
-            // particle.edges();
             particle.update(delta);
+            particle.edges();
+
         })        
     
     }

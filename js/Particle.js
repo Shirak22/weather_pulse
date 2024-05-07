@@ -7,19 +7,20 @@ class Particle extends MeshRope {
         this.emitter = Emitter; 
         this.points = points;
         this.tint = this.emitter.tint; 
+        this.insideBounds = false; 
         this.velocity = {
-            x:5,
-            y:5 
+            x:1,
+            y:1 
         };
-        this.maxLife = Math.floor(Math.random()*200 + 100); 
-        this.pos = {
-            x:Math.random()* this.emitter.width, 
-            y:Math.random()* this.emitter.height
-        }
+
+
+      
+
         this.trailHead = this.emitter.trailHead; 
         this.history = []; 
-        this.points[this.trailHead].x = this.pos.x;
-        this.points[this.trailHead].y = this.pos.y;
+
+        this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A);
+        this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A);
     }
 
 
@@ -31,13 +32,18 @@ class Particle extends MeshRope {
     }
 
     edges(){
-        if(this.points[this.trailHead].x > this.emitter.width || this.points[this.trailHead].x < 0){
-            this.maxLife = 0;
+        let head = this.points[this.trailHead]; 
+
+        if(head.x > this.emitter.verticalBounds.A && 
+           head.x < this.emitter.verticalBounds.B &&
+           head.y > this.emitter.horizontalBounds.A && 
+           head.y < this.emitter.horizontalBounds.B ){
+            this.insideBounds = true;
+        }else {
+
+            this.insideBounds = false ; 
         }
-        if(this.points[this.trailHead].y >  this.emitter.height || this.points[this.trailHead].y <  0){
-            this.velocity.y = -this.velocity.y;  
-        }
-    
+
     }
 
     movePoints(){
@@ -51,8 +57,10 @@ class Particle extends MeshRope {
 
 
 
+
+
+
     update(delta){
-        this.maxLife -= 10; 
 
         let angle = bilinearInterpolation(this.points[this.trailHead].x,this.points[this.trailHead].y,this.emitter.data); 
             // console.log(angle);
@@ -61,17 +69,16 @@ class Particle extends MeshRope {
 
         // this.points[this.trailHead].x += this.velocity.x * delta ;
         // this.points[this.trailHead].y += this.velocity.y * delta ;
+        if (!this.insideBounds) {
+            this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A);
+            this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A);
+        }
+
         this.positionHistory();
         this.movePoints();
-        if(this.maxLife < 0 ){
-            this.visible = false;
-            this.points[this.trailHead].x = Math.random()* this.emitter.width;
-            this.points[this.trailHead].y = Math.random()* this.emitter.height;
-            this.maxLife = 255; 
-        }
-      
 
-        this.visible = true;
+
+   
     }
 
 
