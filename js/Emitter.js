@@ -19,6 +19,7 @@ class Emitter {
             A:0,
             B:0
         }
+        
     }
 
     init(data){
@@ -27,7 +28,7 @@ class Emitter {
         for (let i = 0; i < this.numOfParticles; i++) {
             let points = [];
             for (let j = 0; j < this.numOfMeshPoints; j++) {
-                points.push(new Point(0,0)); 
+                points.push(new Point(this.width/2,this.height/2)); 
             }
             let particle = new Particle(this,points); 
             this.container.addChild(particle); 

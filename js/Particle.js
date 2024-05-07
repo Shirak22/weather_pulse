@@ -6,8 +6,10 @@ class Particle extends MeshRope {
         }); 
         this.emitter = Emitter; 
         this.points = points;
-        this.tint = this.emitter.tint; 
-        this.insideBounds = false; 
+        // this.tint = this.emitter.tint; 
+        this.insideBounds = false;
+        this.insideTheScreen = true; 
+
         this.velocity = {
             x:1,
             y:1 
@@ -15,9 +17,14 @@ class Particle extends MeshRope {
 
         this.trailHead = this.emitter.trailHead; 
         this.history = []; 
-
         this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A);
         this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A);
+    
+        this.counter = 0; 
+        this.maxLife = random(100,50);
+        this.fade = 10; 
+        
+    
     }
 
 
@@ -40,7 +47,15 @@ class Particle extends MeshRope {
 
             this.insideBounds = false ; 
         }
-
+    
+    
+        if(head.x > 0 && head.x < this.emitter.width &&
+            head.y > 0 && head.y < this.emitter.height){
+                this.insideTheScreen = true; 
+        }else{
+            this.insideTheScreen = false; 
+        } 
+    
     }
 
     movePoints(){
@@ -54,35 +69,56 @@ class Particle extends MeshRope {
 
 
     resetHistory(){
+        // reset the the trail to follow the head 
         for (let i = 0; i < this.history.length; i++) {
             this.history[i].x =  this.points[this.trailHead].x; 
             this.history[i].y =  this.points[this.trailHead].y ; 
-
         }
     }
 
 
 
-
     update(delta){
-
         let angle = bilinearInterpolation(this.points[this.trailHead].x,this.points[this.trailHead].y,this.emitter.data); 
-            // console.log(angle);
         this.points[this.trailHead].x += this.velocity.x * delta * Math.cos(radians(angle));
         this.points[this.trailHead].y += this.velocity.y * delta * Math.sin(radians(angle));
 
-        // this.points[this.trailHead].x += this.velocity.x * delta ;
-        // this.points[this.trailHead].y += this.velocity.y * delta ;
+        
+        
         if (!this.insideBounds) {
             this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A);
             this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A);
-            this.resetHistory();
-            
+            this.resetHistory();  
+
         }
+
+        if(!this.insideTheScreen){
+            this.points[this.trailHead].x = random(this.emitter.width , 0);
+            this.points[this.trailHead].y = random(this.emitter.height , 0);
+            this.resetHistory(); 
+        }
+
+
+        this.alpha = this.fade/10; 
 
         this.positionHistory();
         this.movePoints();
-   
+
+
+
+        // apply the limit of particle life 
+        if(this.counter > this.maxLife && this.counter < this.maxLife + 50){
+            this.fade--; 
+        }else if(this.counter > this.maxLife + 50){
+            this.counter = 0;
+            this.fade = 10;  
+            this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A);
+            this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A);
+            
+            this.resetHistory(); 
+        }
+        this.counter++; 
+
     }
 
 

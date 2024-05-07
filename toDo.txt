@@ -1,0 +1,28 @@
+2024-05-07
+to do list --> 
+
+    ::::Fixed:::: 
+        +Fix the position White line rendering issue   :::: fixed :::: 
+        +create age for every particle with fade in, fade out effect. :::: fixed ::::
+        +contain all the particles in the screen boundries. :::: fixed ::::
+
+
+    :::: to be fixed :::: 
+        +make a reset method for the emitter. to be resat after map move or scroll. 
+        +create screen boundries to make the render in screen bounds. 
+        +Optimize the performence of the interpolation (Now it runs 60x per second for every particle !!!expensive function!!! )
+         - hint: make grids, every grid has wind interploated angel. based on the grids resoloution. 
+        +make particles scale option in the emitter. 
+    
+
+
+
+
+    ::::Bugs::::
+
+        +Bug: initial position of the Mesh points is not synced with the head initial position. 
+     
+    
+
+
+::: TODO ::: 
