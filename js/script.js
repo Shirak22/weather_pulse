@@ -9,48 +9,58 @@
 // create Time slider
 // create beautiful UI
 
+   async  function main(){
 
-
-(async () => {
-    // :: Get Data ::
-    let data = await getData();
-    let windDirectionArray = data.wind_direction; 
-    let coordinates = data.coordinates; 
-    
-    
-    // ::::App initialization ::: 
-    let appParams = {
-        width: mapSize.x,
-        height: mapSize.y,
-        backgroundAlpha:.5,
-
+       // :: Get Data ::
+       let data = await getData();
+       // ::::App initialization ::: 
+       let appParams = {
+           width: mapSize.x,
+           height: mapSize.y,
+           backgroundAlpha: config.general_settings.app.canvas_background_alpha,
+       }
+   
+       const app = new Application();
+       await app.init(appParams);
+   
+       app.view.setAttribute("id", "myCanvas");
+       document.getElementById("map").appendChild(app.canvas);
+   
+       // ::: Get all textures :::
+       let textures = await getAssets(); //getAssets() in js/textures.js
+   
+       let setupProps = {
+           textures, 
+           app,
+           data,
+       }
+   
+       await setup(setupProps); 
+   
+   // ::: Map movments ::: 
+       map.on('move' , ()=> {
+           onMapMove();
+   
+       }); 
+   
+       map.on('moveend' , ()=> {
+           onMapMoveEnd();
+       }); 
+   
+       app.ticker.maxFPS = config.general_settings.app.maxFPS;
+       app.ticker.minFPS = config.general_settings.app.minFPS;
+   // :::: Canvas Loop  ::::
+       app.ticker.add((time)=> {
+            update(time,app);
+       });
+   
+   
     }
 
-    const app = new Application();
-    await app.init(appParams);
-
-    app.view.setAttribute("id", "myCanvas");
-    document.getElementById("map").appendChild(app.canvas);
-    
-    // ::: Get all textures :::
-    let {pointTexture, trailTexture} = await getAssets(); //getAssets() in js/textures.js
-
-    // :::: Canvas Drawing  ::::
-   let particleEffect = new Effect(app,trailTexture); // js/Particle.js
-       particleEffect.init();
-        
-   
-// ::: Map move ::: 
-    map.on('moveend' , ()=> {
-        particleEffect.reset();
-    }); 
-
-
-// :::: Canvas Loop  ::::
-    app.ticker.add(()=> {
-        particleEffect.update();
-    });
-
-})();
+  (async ()=> {
+    if(config){
+        main(config);
+    }
+  })();
 
 

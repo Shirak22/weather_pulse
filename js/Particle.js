@@ -1,89 +1,125 @@
 class Particle extends MeshRope {
-    constructor(Effect, points) {
+    constructor(Emitter,points){
         super({
-            texture: Effect.texture,
-            points:Effect.points,
-        });
-        this.effect = Effect;
-        this.posx = 0;
-        this.posy = 0;
-        this.vx = 10;
-        this.vy = 1;
+            texture: Emitter.texture,
+            points,
+        }); 
+        this.emitter = Emitter; 
+        this.points = points;
+        this.tint = this.emitter.tint; 
+        this.insideBounds = false;
+        this.insideTheScreen = true; 
+
+        this.velocity = {
+            x:1,
+            y:1 
+        };
+
+        this.trailHead = this.emitter.trailHead; 
         this.history = []; 
-    }
+        this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A);
+        this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A);
     
+        this.counter = 0; 
+        this.maxLife = random(100,50);
+        this.fade = 10; 
+        this.scale.set(this.emitter.scaleFactor);
+    
+    }
+
+
+    positionHistory() {
+        this.history.push(new Point(this.points[this.trailHead].x, this.points[this.trailHead].y));
+        if (this.history.length > this.points.length) {
+            this.history.shift();
+        }
+    }
+
+    edges(){
+        let head = this.points[this.trailHead]; 
+
+        if(head.x *  this.emitter.scaleFactor  > this.emitter.verticalBounds.A && 
+           head.x * this.emitter.scaleFactor  < this.emitter.verticalBounds.B  &&
+           head.y * this.emitter.scaleFactor  > this.emitter.horizontalBounds.A && 
+           head.y  * this.emitter.scaleFactor  < this.emitter.horizontalBounds.B ){
+            this.insideBounds = true;
+        }else {
+
+            this.insideBounds = false ; 
+        }
+    
+    
+        if(head.x * this.emitter.scaleFactor > 0 && head.x * this.emitter.scaleFactor  < this.emitter.width &&
+            head.y * this.emitter.scaleFactor > 0 && head.y * this.emitter.scaleFactor < this.emitter.height){
+                this.insideTheScreen = true; 
+        }else{
+            this.insideTheScreen = false; 
+        } 
+    
+    }
+
+    movePoints(){
+        for (let i = 0; i < this.points.length; i++) {
+            if(this.history[i]){
+                this.points[i].x = this.history[i].x ; 
+                this.points[i].y = this.history[i].y ; 
+            }         
+        }
+    }
+
+
+    resetHistory(){
+        // reset the the trail to follow the head 
+        for (let i = 0; i < this.history.length; i++) {
+            this.history[i].x =  this.points[this.trailHead].x; 
+            this.history[i].y =  this.points[this.trailHead].y ; 
+        }
+    }
 
 
 
+    update(delta){
+        let angle = bilinearInterpolation(this.points[this.trailHead].x *  this.emitter.scaleFactor  ,this.points[this.trailHead].y* this.emitter.scaleFactor ,this.emitter.data); 
+        this.points[this.trailHead].x += this.velocity.x * delta * Math.cos(radians(angle));
+        this.points[this.trailHead].y += this.velocity.y * delta * Math.sin(radians(angle));
 
+        
+        
+        if (!this.insideBounds) {
+            this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A) / this.emitter.scaleFactor ;
+            this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A) /  this.emitter.scaleFactor   ;
+            this.resetHistory();  
+
+        }
+
+        if(!this.insideTheScreen){
+            this.points[this.trailHead].x = random(this.emitter.width  , 0) / this.emitter.scaleFactor ;
+            this.points[this.trailHead].y = random(this.emitter.height , 0) / this.emitter.scaleFactor ;
+            this.resetHistory(); 
+        }
+
+
+        this.alpha = this.fade/10; 
+
+        this.positionHistory();
+        this.movePoints();
+
+
+
+        // apply the limit of particle life 
+        if(this.counter > this.maxLife && this.counter < this.maxLife + 50){
+            this.fade--; 
+        }else if(this.counter > this.maxLife + 50){
+            this.counter = 0;
+            this.fade = 10;  
+            this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A) /  this.emitter.scaleFactor ;
+            this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A) / this.emitter.scaleFactor ;
+            
+            this.resetHistory(); 
+        }
+        this.counter++; 
+
+    }
 
 
 }
-
-
-
-class Effect {
-    constructor(app, texture) {
-        this.app = app;
-        this.height = this.app.screen.height;
-        this.width = this.app.screen.width;
-        this.texture = texture;
-        this.points = []; 
-        this.numOfParticles = 2;
-        this.container = new Container();
-        this.count = 0; 
-
-    }
-
-
-
-    init() {
-
-        //generate particles and its mesh points, then add them to the stage to render render them on the screen. 
-        // push points to point array; 
-        for(let point = 0; point < 10; point++){
-            this.points.push(new Point((256/10) * point,0));
-        }
-
-        this.generateParticles();
-
-        this.app.stage .addChild(this.container);
-
-
-
-    }
-
-
-    generateParticles() {
-        //push to particles to container  
-        for (let i = 0; i < this.numOfParticles; i++) {
-            let particle = new Particle(this);
-            particle.position.set(Math.random()* this.app.screen.width,Math.random()* this.app.screen.width);
-            particle.visible = true;
-            particle.alpha = 1; 
-            this.container.addChild(particle);
-        }
-
-    }
-
-
-
-
-
-    update() {   
-        this.count += .1 ; 
-        if(this.count > 6) this.count = 0; 
-        this.container.children.forEach(particle => {
-            particle.geometry.points.forEach((point,index) => {
-                    point.y = Math.sin(this.count * index) *10; 
-            });
-        });
-    }
-
-    reset() {
-
-    }
-}
-
-
-

@@ -4,7 +4,7 @@ const validTimes_URL = `https://opendata-download-metfcst.smhi.se/api/category/p
 
 const openData_settings = {
     parameter: "wd",
-    downSample: "4",
+    downSample: config.general_settings.data.downSample,
 }
 
 const getValidTimes = async ()=> {
@@ -16,7 +16,7 @@ const getValidTimes = async ()=> {
 
 const getData = async ()=> {
     let validTimes = await getValidTimes();
-    let validTime = validTimes[2].replaceAll("-","").replaceAll(":","");
+    let validTime = validTimes[3].replaceAll("-","").replaceAll(":","");
     const url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/multipoint/validtime/${validTime}/parameter/${openData_settings.parameter}/leveltype/hl/level/10/data.json?downsample=${openData_settings.downSample}`
     const res = await fetch(url);
     const data = await res.json();
@@ -26,9 +26,11 @@ const getData = async ()=> {
         coordinates: data.geometry.coordinates,
         wind_direction: data.timeSeries[0].parameters[0].values
     }; 
+    console.log(validTime);
     return rasterPoints;
-
-
-
     
 }
+
+
+
+

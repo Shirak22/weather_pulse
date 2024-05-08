@@ -1,6 +1,11 @@
-const radians = (angle)=> {
+function radians (angle){
     return angle * Math.PI/180;
 }
+
+function random(y,x){
+    return Math.random() * (y - x ) + x ; 
+}
+
 
 
 

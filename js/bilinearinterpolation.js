@@ -3,25 +3,29 @@ function bilinearInterpolation(x, y, sortedCoords) {
     let p1, p2, p3, p4;
 
     // Calculate distances from the target point
-    sortedCoords.forEach(point => {
-        let distSquared = Math.pow(point.pixel[0] - x, 2) + Math.pow(point.pixel[1] - y, 2);
-
+    sortedCoords.pixel.forEach((point,index) => {
+        let distSquared = Math.pow(point.x - x, 2) + Math.pow(point.y - y, 2);
+        
         if (!p1 || distSquared < p1.distSquared) {
             p4 = p3;
             p3 = p2;
             p2 = p1;
-            p1 = { point: point, distSquared: distSquared };
+            p1 = { point: point,wind: sortedCoords.wind_direction[index], distSquared: distSquared };
         } else if (!p2 || distSquared < p2.distSquared) {
             p4 = p3;
             p3 = p2;
-            p2 = { point: point, distSquared: distSquared };
+            p2 = { point: point,wind: sortedCoords.wind_direction[index], distSquared: distSquared };
         } else if (!p3 || distSquared < p3.distSquared) {
             p4 = p3;
-            p3 = { point: point, distSquared: distSquared };
+            p3 = { point: point,wind: sortedCoords.wind_direction[index], distSquared: distSquared };
         } else if (!p4 || distSquared < p4.distSquared) {
-            p4 = { point: point, distSquared: distSquared };
+            p4 = { point: point,wind: sortedCoords.wind_direction[index], distSquared: distSquared };
         }
+    
+    
     });
+
+
     // Ensure all points are found
     if (!p1 || !p2 || !p3 || !p4) {
         console.log("Some points not found");
@@ -40,12 +44,12 @@ function bilinearInterpolation(x, y, sortedCoords) {
     w2 /= totalWeight;
     w3 /= totalWeight;
     w4 /= totalWeight;
-
+    // console.log(w1,w2,w3,w4);
     //convert from degrees to radians 
-    let windDirectionRad1 = radians(p1.point.windDirection); 
-    let windDirectionRad2 = radians(p2.point.windDirection); 
-    let windDirectionRad3 = radians(p3.point.windDirection); 
-    let windDirectionRad4 = radians(p4.point.windDirection); 
+    let windDirectionRad1 = radians(p1.wind);
+    let windDirectionRad2 = radians(p2.wind); 
+    let windDirectionRad3 = radians(p3.wind); 
+    let windDirectionRad4 = radians(p4.wind); 
 
     //convert from polat to Cartesian coordinates 
     let x1 = w1* Math.cos(windDirectionRad1); 
@@ -66,7 +70,7 @@ function bilinearInterpolation(x, y, sortedCoords) {
     if(interpolatedWindDirection < 0 ) {
         interpolatedWindDirection +=360; 
     }  
-  
+    
 
     //let interpolatedWindDirection = w1 * (p1.point.windDirection) + w2 * (p2.point.windDirection) + w3 * (p3.point.windDirection) + w4 * (p4.point.windDirection);
 
