@@ -6,7 +6,7 @@ class Particle extends MeshRope {
         }); 
         this.emitter = Emitter; 
         this.points = points;
-        // this.tint = this.emitter.tint; 
+        this.tint = this.emitter.tint; 
         this.insideBounds = false;
         this.insideTheScreen = true; 
 
@@ -23,7 +23,7 @@ class Particle extends MeshRope {
         this.counter = 0; 
         this.maxLife = random(100,50);
         this.fade = 10; 
-        
+        this.scale.set(this.emitter.scaleFactor);
     
     }
 
@@ -38,10 +38,10 @@ class Particle extends MeshRope {
     edges(){
         let head = this.points[this.trailHead]; 
 
-        if(head.x > this.emitter.verticalBounds.A && 
-           head.x < this.emitter.verticalBounds.B &&
-           head.y > this.emitter.horizontalBounds.A && 
-           head.y < this.emitter.horizontalBounds.B ){
+        if(head.x *  this.emitter.scaleFactor  > this.emitter.verticalBounds.A && 
+           head.x * this.emitter.scaleFactor  < this.emitter.verticalBounds.B  &&
+           head.y * this.emitter.scaleFactor  > this.emitter.horizontalBounds.A && 
+           head.y  * this.emitter.scaleFactor  < this.emitter.horizontalBounds.B ){
             this.insideBounds = true;
         }else {
 
@@ -49,8 +49,8 @@ class Particle extends MeshRope {
         }
     
     
-        if(head.x > 0 && head.x < this.emitter.width &&
-            head.y > 0 && head.y < this.emitter.height){
+        if(head.x * this.emitter.scaleFactor > 0 && head.x * this.emitter.scaleFactor  < this.emitter.width &&
+            head.y * this.emitter.scaleFactor > 0 && head.y * this.emitter.scaleFactor < this.emitter.height){
                 this.insideTheScreen = true; 
         }else{
             this.insideTheScreen = false; 
@@ -79,22 +79,22 @@ class Particle extends MeshRope {
 
 
     update(delta){
-        let angle = bilinearInterpolation(this.points[this.trailHead].x,this.points[this.trailHead].y,this.emitter.data); 
+        let angle = bilinearInterpolation(this.points[this.trailHead].x *  this.emitter.scaleFactor  ,this.points[this.trailHead].y* this.emitter.scaleFactor ,this.emitter.data); 
         this.points[this.trailHead].x += this.velocity.x * delta * Math.cos(radians(angle));
         this.points[this.trailHead].y += this.velocity.y * delta * Math.sin(radians(angle));
 
         
         
         if (!this.insideBounds) {
-            this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A);
-            this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A);
+            this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A) / this.emitter.scaleFactor ;
+            this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A) /  this.emitter.scaleFactor   ;
             this.resetHistory();  
 
         }
 
         if(!this.insideTheScreen){
-            this.points[this.trailHead].x = random(this.emitter.width , 0);
-            this.points[this.trailHead].y = random(this.emitter.height , 0);
+            this.points[this.trailHead].x = random(this.emitter.width  , 0) / this.emitter.scaleFactor ;
+            this.points[this.trailHead].y = random(this.emitter.height , 0) / this.emitter.scaleFactor ;
             this.resetHistory(); 
         }
 
@@ -112,8 +112,8 @@ class Particle extends MeshRope {
         }else if(this.counter > this.maxLife + 50){
             this.counter = 0;
             this.fade = 10;  
-            this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A);
-            this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A);
+            this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A) /  this.emitter.scaleFactor ;
+            this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A) / this.emitter.scaleFactor ;
             
             this.resetHistory(); 
         }
