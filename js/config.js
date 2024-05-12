@@ -4,7 +4,7 @@ var config = {
             consoleLog_enable: false,
         },
         app: {
-            canvas_background_alpha: .5,
+            canvas_background_alpha: 0,
             maxFPS: 30,
             minFPS: 25,
         },
@@ -25,8 +25,9 @@ var config = {
     },
     windParticles: {
             numOfParticles: 2000,
-            numOfMeshPoints:100,
+            numOfMeshPoints:30,
             scale: .5,
-            color: 0xffff09,
-    }
+            color: 0x555555,
+    },
+
 }

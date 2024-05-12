@@ -12,6 +12,14 @@ to do list -->
     :::: to be fixed :::: 
         +make a reset method for the emitter. to be resat after map move or scroll. 
 
+    :::: add more features :::: 
+
+        +add wind speed parameter, visualaizing by adding the wind speed as particles velocity. 
+        +make a simple UI 
+        +add more timeApproved steps to the UI and maybe a simple slider. 
+        +get more parameters and visualize them on the map. 
+        
+
 
 
 
@@ -23,6 +31,7 @@ to do list -->
 
         +Bug: initial position of the Mesh points is not synced with the head initial position.   (prio);
      
+    
     
 
 
