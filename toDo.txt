@@ -32,7 +32,6 @@ to do list -->
         +Bug: initial position of the Mesh points is not synced with the head initial position.   (prio);
      
     
-    
 
 
 ::: TODO ::: 
