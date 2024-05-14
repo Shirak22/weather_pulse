@@ -5,7 +5,6 @@ class Emitter {
         this.height = height; 
         this.container = new Container();
         this.data; 
-        this.scaleFactor = 1 ; 
         this.numOfParticles = config.windParticles.numOfParticles ; 
         this.numOfMeshPoints = config.windParticles.numOfMeshPoints; 
         this.tint = config.windParticles.color;

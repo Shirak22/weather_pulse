@@ -24,7 +24,7 @@ class Particle extends MeshRope {
         this.maxLife = random(100,50);
         this.fade = 10; 
         this.scale.set(this.emitter.scaleFactor);
-    
+        this.visible = true;
     }
 
 
@@ -79,10 +79,12 @@ class Particle extends MeshRope {
 
 
     update(delta){
+        this.counter++; 
+
         let angle = bilinearInterpolation(this.points[this.trailHead].x *  this.emitter.scaleFactor  ,this.points[this.trailHead].y* this.emitter.scaleFactor ,this.emitter.data); 
         this.points[this.trailHead].x += this.velocity.x * delta * Math.cos(radians(angle));
         this.points[this.trailHead].y += this.velocity.y * delta * Math.sin(radians(angle));
-
+        
         
         
         if (!this.insideBounds) {
@@ -100,26 +102,26 @@ class Particle extends MeshRope {
 
 
         this.alpha = this.fade/10; 
+        
 
-        this.positionHistory();
-        this.movePoints();
-
-
+        
 
         // apply the limit of particle life 
         if(this.counter > this.maxLife && this.counter < this.maxLife + 50){
             this.fade--; 
         }else if(this.counter > this.maxLife + 50){
+            this.visible = true; 
             this.counter = 0;
-            this.fade = 10;  
+            this.fade = 7;  
             this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A) /  this.emitter.scaleFactor ;
             this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A) / this.emitter.scaleFactor ;
             
             this.resetHistory(); 
         }
-        this.counter++; 
-
+        
+        this.positionHistory();
+        this.movePoints();
     }
 
-
+    
 }
