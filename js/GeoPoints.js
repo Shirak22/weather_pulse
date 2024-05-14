@@ -2,17 +2,16 @@ class GeoPoint extends Sprite {
     constructor(GeoPoints,coords){
         super(GeoPoints.texture); 
         this.GeoPoints = GeoPoints; 
-        this.tint = this.GeoPoints.tint;
+        this.tint = config.geoPoints.color;
         this.coords = coords; 
-        this.visible = false;
-        this.scale.set(1); 
+        this.visible = config.geoPoints.show;
+        this.scale.set(config.geoPoints.size); 
         this.pixelPos; 
 
     }
 
 
     draw(){
-       this.visible = true;
         this.pixelPos = toPixel(this.coords); 
         this.x = this.pixelPos.x ; 
         this.y = this.pixelPos.y;
@@ -21,7 +20,6 @@ class GeoPoint extends Sprite {
 
 
     update() {
-        this.visible = true;
         this.pixelPos = toPixel(this.coords); 
         this.x = this.pixelPos.x ; 
         this.y = this.pixelPos.y;
@@ -38,7 +36,6 @@ class GeoPoints {
         this.texture = texture;
         this.data = data; 
         this.app = app;
-        this.tint = 0xff0033; 
         this.pointsPool = new Container();
         this.screenBounds = {
             x:this.app.screen.width,

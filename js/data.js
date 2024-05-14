@@ -3,7 +3,6 @@
 const validTimes_URL = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/validtime.json`; 
 
 const openData_settings = {
-    parameter: "wd",
     downSample: config.general_settings.data.downSample,
 }
 
@@ -17,16 +16,26 @@ const getValidTimes = async ()=> {
 const getData = async ()=> {
     let validTimes = await getValidTimes();
     let validTime = validTimes[3].replaceAll("-","").replaceAll(":","");
-    const url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/multipoint/validtime/${validTime}/parameter/${openData_settings.parameter}/leveltype/hl/level/10/data.json?downsample=${openData_settings.downSample}`
-    const res = await fetch(url);
-    const data = await res.json();
+
+
+    //wind direction 
+    const windDirection_url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/multipoint/validtime/${validTime}/parameter/wd/leveltype/hl/level/10/data.json?downsample=${openData_settings.downSample}`
+    const windDirection_response = await fetch(windDirection_url);
+    const windDirection_data = await windDirection_response.json();
     
+    const windspeed_url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/multipoint/validtime/${validTime}/parameter/ws/leveltype/hl/level/10/data.json?downsample=${openData_settings.downSample}`
+    const windSpeed_response = await fetch(windspeed_url);
+    const windSpeed_data = await windSpeed_response.json();
     let rasterPoints = {
-        approvedTime: data.approvedTime,
-        coordinates: data.geometry.coordinates,
-        wind_direction: data.timeSeries[0].parameters[0].values
+        validTime,
+        coordinates: windDirection_data.geometry.coordinates,
+        wind_direction: windDirection_data.timeSeries[0].parameters[0].values,
+        wind_speed:windSpeed_data.timeSeries[0].parameters[0].values,
+        
     }; 
-    console.log(validTime);
+
+
+    console.log(rasterPoints);
     return rasterPoints;
     
 }

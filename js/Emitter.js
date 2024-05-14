@@ -29,6 +29,7 @@ class Emitter {
             for (let j = 0; j < this.numOfMeshPoints; j++) {
                 points.push(new Point(this.width/2,this.height/2)); 
             }
+
             let particle = new Particle(this,points); 
             this.container.addChild(particle); 
         }
@@ -77,9 +78,10 @@ class Emitter {
         this.updateData();
         this.getBoundries();
 
-        this.container.children.forEach(particle => {
+         this.container.children.forEach(particle => {
             particle.update(delta);
             particle.edges();
+           config.windParticles.colorize &&  particle.colorize();
 
         })        
     
