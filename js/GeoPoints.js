@@ -11,20 +11,10 @@ class GeoPoint extends Sprite {
     }
 
 
-    draw(){
+    update(){
         this.pixelPos = toPixel(this.coords); 
         this.x = this.pixelPos.x ; 
         this.y = this.pixelPos.y;
-       
-    }
-
-
-    update() {
-        this.pixelPos = toPixel(this.coords); 
-        this.x = this.pixelPos.x ; 
-        this.y = this.pixelPos.y;
-
-
     }
 
 }
@@ -37,6 +27,7 @@ class GeoPoints {
         this.data = data; 
         this.app = app;
         this.pointsPool = new Container();
+        this.visibility = false; 
         this.screenBounds = {
             x:this.app.screen.width,
             y: this.app.screen.height,
@@ -54,20 +45,13 @@ class GeoPoints {
         this.app.stage.addChild(this.pointsPool); 
     }
 
-
-    draw(){
-        this.fill();
-        for(let i=0; i < this.pointsPool.children.length; i++){
-            this.pointsPool.children[i].draw();
-        }
-
-
+    draw(bool) {
+        this.visibility = bool; 
+            for (let i = 0; i < this.pointsPool.children.length; i++) {
+                this.pointsPool.children[i].visible = this.visibility;
+                this.pointsPool.children[i].update();
+            }
+      
     }
 
-    update(){
-        for(let i=0; i < this.pointsPool.children.length; i++){
-            this.pointsPool.children[i].update(); 
-        }
-
-    }
 }

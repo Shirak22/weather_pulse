@@ -1,18 +1,27 @@
-// Get OpenData 
-// Bilinear Interpolation 
-// particle system to simulate the wind 
-// - render the particles flow on the map 
-// - move the particles based on the interpolated poistion
-// - render trails to particles 
-// - make the particles velocity change with the wind speed changes 
-// get more parameters. 
-// create Time slider
-// create beautiful UI
+
+
 
    async  function main(){
 
        // :: Get Data ::
        let data = await getData();
+
+        let dataInfo = new Controls("dataInfo","dataInfo");
+        
+        let dataInfo_content = `
+                <h2 class="sub_title">Data info</h2>
+                <section class="sub_settings">
+                    <p>date & time: <span>${data.validTime}</span></p>
+                </section>
+                <section class="sub_settings">
+                    <p> Total geo points: <span>${data.coordinates.length}</span></p>
+                </section>
+                
+             `; 
+   
+
+    dataInfo.setContent(dataInfo_content);
+
        // ::::App initialization ::: 
        let appParams = {
            width: mapSize.x,

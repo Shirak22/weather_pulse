@@ -1,22 +1,23 @@
 let emitter;
 let points;
 let mousePos; 
+
+// Dom elements 
+let particleTail_slider;
+let particleSpeed_slider; 
+let geoPoints_checkbox; 
+let colorize_checkbox; 
+let windAnimation_checkbox; 
+
 let   ctx = new Text({
     text:"wind",
     style:{
         fontFamily:"arial",
         fontSize: 20,
-        fill: "#000",
+        fill: "#eee",
+        backgroundColor:"#eee"
     }
 }); 
-
-    // --Get SMHI data 
-    // --get the geo boundries 
-    // --get the pixel boundries 
-    // --make the particles be generated in the boundries
-    // --make the particles move in the screen not outside screen boundries 
-    // --make the particles movment based on the wind direction interpolation 
-
 
 
 
@@ -33,9 +34,11 @@ async function setup({app,data,textures}){
     mousePos = e.global;
     ctx.x = mousePos.x + 10 ;   
     ctx.y = mousePos.y + 10;
+     
     let pixeledData = data.coordinates.map(point => {
             return toPixel(point);
     });
+
     let fixedData = {
         ...data,
         pixel:pixeledData
@@ -48,15 +51,23 @@ async function setup({app,data,textures}){
 
 
     emitter = new Emitter(textures.trailTexture,app.screen.width, app.screen.height);
-    emitter.init(data);
+    emitter.setData(data);
+    emitter.init();
     emitter.addToStage(app);
-    
+
     // draw the coordinates 
-    points = new GeoPoints(textures.pointTexture, data,app);
-    points.draw();
-    
+    points = new GeoPoints(textures.pointTexture, data,app);    
+    points.fill();
     app.stage.addChild(ctx);
     
+
+    // Controls( inputElementID , OutputElementID )  
+    particleTail_slider = new Controls("particle_tail", "particle_tail-length"); 
+    particleSpeed_slider = new Controls("particle_speed_factor", "particle_tail-speed");
+    geoPoints_checkbox = new Controls("geopoints_view", "geopoints_view"); 
+    colorize_checkbox = new Controls("particle_colorize","particle_colorize");
+    windAnimation_checkbox = new Controls("parameters_wind", "parameters_wind"); 
+  
 
 }
 
@@ -65,14 +76,33 @@ async function setup({app,data,textures}){
 // the update function is the Ticker in PIXIJS, called frequently, here goes all the code that needs to be updated all the time. 
 function update(time,app){
     console.log('%c :::Update::: ', 'font-weight: bold; color: #ff0055');
-    emitter.update(time.deltaTime);
+
+    if(windAnimation_checkbox.getValue()){
+        if(!app.stage.children.includes(emitter.container)){
+            app.stage.addChild(emitter.container);
+            console.log("the contanier not found");
+        }
+        emitter.update(time.deltaTime);
+        // controls
+        emitter.tailLength(particleTail_slider.getValue());
+        emitter.speed(particleSpeed_slider.getValue());
+        emitter.colorize(colorize_checkbox.getValue());
+    }else {
+        app.stage.removeChild(emitter.container);
+    }
+
+
+
+    points.draw(geoPoints_checkbox.getValue());
+
 }
 
 
 
 function onMapMove (){
     console.log('%c :::On map move::: ', 'font-weight: bold; color: #ff0055');
-    points.update();
+
+
 }
 
 

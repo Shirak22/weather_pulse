@@ -14,9 +14,93 @@
 </head>
 
 <body>
-    <div id="map"></div>
-   
     
+        
+    
+        <header class="header">
+            <img class="smhi__logo" src="./assets/smhi-logo-120.png" alt="SMHI">
+        </header>
+
+        <main >
+            <section class="sidebar_right">
+                <h1 class="title">Settings</h1>
+                <ul class="sidebar__menu">
+                    <li id="dataInfo" class="sidebar__menu-child">
+                       
+                    </li>
+
+                    <li class="sidebar__menu-child">
+                        <h2 class="sub_title">wind animation</h2>
+                        <section class="sub_settings">
+                            <label for="particle_tail">tail length <span id="particle_tail-length"></span></label>
+                            <input type="range" id="particle_tail" min="10" max="100" step="10" value="20">
+                        </section>
+                        <section class="sub_settings">
+                            <label for="particle_speed_factor">speed factor <span id="particle_tail-speed"></span> </label>
+                            <input type="range" id="particle_speed_factor" min="1" max="100" value="8">
+                            <p id="particle_tail-speed"></p>
+                        </section>
+                        <section class="sub_settings">
+                            <label for="particle_colorize">colorize</label>
+                            <input type="checkbox" id="particle_colorize" checked >
+                        </section>
+                    </li>
+
+                    <li class="sidebar__menu-child">
+                        <h2 class="sub_title">Forecast points</h2>
+                        <section class="sub_settings">
+                            <label for="geopoints_view">view points</label>
+                            <input type="checkbox" id="geopoints_view"  >
+                        </section>
+                        
+                    </li>
+
+                    <li class="sidebar__menu-child">
+                        <h2 class="sub_title">Parameters</h2>
+                        <section class="sub_settings">
+                            <label for="parameters_wind">wind</label>
+                            <input type="checkbox" id="parameters_wind" checked >
+                        </section>
+                        <section class="sub_settings">
+                            <label for="parameters_tempreture">tempreture</label>
+                            <input type="checkbox" id="parameters_tempreture" >
+                        </section>
+                        
+                        <section class="sub_settings">
+                            <label for="parameters_clouds">clouds</label>
+                            <input type="checkbox" id="parameters_clouds" >
+                        </section>
+                    </li>
+
+                </ul>
+                <footer class="sidebar__footer"><a href="">SMHI</a></footer>
+            </section>
+
+            <section id="sidebar__scale" class="sidebar__scale">
+                    <p class="scale_unit"> °C </p>
+                    <aside>s</aside>                
+                    <aside>s</aside>                
+                    <aside>s</aside>                
+                    <aside>s</aside>                
+                    <aside>s</aside>                
+                    <aside>s</aside>                
+                    <aside>s</aside>                
+            </section>
+
+            <section id="timeline">
+
+            </section>
+            <div id="map"></div>
+        </main>
+
+        <footer>footer</footer>
+
+    
+
+
+
+    <!-- add JS files to the project  -->
+    <script src="js/controls.js"></script>
     <script src="js/config.js"></script>
     <script src="js/PIXI_methods.js"></script>
     <script src="js/data.js"></script>

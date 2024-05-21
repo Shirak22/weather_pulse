@@ -1,7 +1,7 @@
 var config = {
     general_settings: {
         app: {
-            canvas_background_alpha: .5,
+            canvas_background_alpha: .2,
             maxFPS: 30,
             minFPS: 25,
         },
@@ -21,7 +21,7 @@ var config = {
         }
     },
     windParticles: {
-            numOfParticles: 2000,
+            numOfParticles: 3000,
             numOfMeshPoints:15,
             scale: .35,
             color: 0xffffff,
@@ -31,8 +31,8 @@ var config = {
     },
     geoPoints: {
         size: 2,
-        color:0xff0055,
-        show: false,
+        color:0x00ffff,
+        show: true,
     }
 
 }

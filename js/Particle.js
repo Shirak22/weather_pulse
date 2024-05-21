@@ -9,7 +9,8 @@ class Particle extends MeshRope {
         this.tint = this.emitter.tint; 
         this.insideBounds = false;
         this.insideTheScreen = true; 
-        this.velocityFactor = config.windParticles.velocityFactor;
+        this.velocityFactor = this.emitter.speedFactor;
+        
         this.velocity = {
             x:1,
             y:1 
@@ -136,6 +137,10 @@ class Particle extends MeshRope {
 
         this.movePoints();
         this.positionHistory();
+        
+        if(this.velocityFactor !== this.emitter.speedFactor){
+            this.velocityFactor = this.emitter.speedFactor;
+        }
         
      
     }

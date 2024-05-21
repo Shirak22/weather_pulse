@@ -10,12 +10,12 @@ to do list -->
 
         +add wind speed parameter, visualaizing by adding the wind speed as particles velocity. :::: fixed ::::
         +winds particles direction correction :::: fixed ::::
+        +make a simple UI 
 
 
 
     :::: add more features :::: 
 
-        +make a simple UI 
         +add more timeApproved steps to the UI and maybe a simple slider. 
         
         +get more parameters and visualize them on the map. 
