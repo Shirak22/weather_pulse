@@ -1,4 +1,3 @@
-//https://opendata-download-metfcst.smhi.se/api/category/pmp3gExt/version/2/validtime.json
 
 const validTimes_URL = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/validtime.json`; 
 
@@ -12,10 +11,8 @@ const getValidTimes = async ()=> {
     return data.validTime;
 }
 
-
-const getData = async ()=> {
-    let validTimes = await getValidTimes();
-    let validTime = validTimes[3].replaceAll("-","").replaceAll(":","");
+const getData = async (time)=> {
+    let validTime = time.replaceAll("-","").replaceAll(":","");
 
 
     //wind direction 
@@ -26,6 +23,7 @@ const getData = async ()=> {
     const windspeed_url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/multipoint/validtime/${validTime}/parameter/ws/leveltype/hl/level/10/data.json?downsample=${openData_settings.downSample}`
     const windSpeed_response = await fetch(windspeed_url);
     const windSpeed_data = await windSpeed_response.json();
+    
     let rasterPoints = {
         validTime,
         coordinates: windDirection_data.geometry.coordinates,

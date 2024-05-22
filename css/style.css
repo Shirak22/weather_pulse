@@ -1,3 +1,8 @@
+:root {
+    --menu-background: rgba(0 , 0, 0, .5);
+    --menu-text-color: #eee;
+}
+
 *{
     margin: 0;
     padding: 0;
@@ -13,7 +18,7 @@ body {
 
 a,li{
     text-decoration: none;
-    color: #eee;
+    color: var(--menu-text-color);
 
 }
 li{
@@ -41,7 +46,7 @@ ul {
 }
 
 .sidebar_right{
-    background: rgba(0 , 0, 0, .5);
+    background: var(--menu-background);
     z-index: 2;
     position: absolute;
     top: 50%;
@@ -59,7 +64,7 @@ ul {
 
 }
 .sidebar_right .title {
-    color: #eee;
+    color: var(--menu-text-color);
     margin: 1rem;
     font-size: 1.4rem;
 
@@ -71,7 +76,8 @@ ul {
     font-size: 1.3rem;
 }
 .sidebar__scale{
-    background: #eee;
+    background: var(--menu-text-color);
+    
     z-index: 2;
     width: 2rem;
     position: absolute;
@@ -93,7 +99,37 @@ ul {
     background-color: brown;
     height: 2rem;
     text-align: center;
+    padding: .3rem 1rem;
+    color: var(--menu-text-color);
 }
+#timeline {
+    background: var(--menu-background);
+    position:absolute; 
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%,0);
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    z-index: 2;    
+}
+
+#timeline  aside {
+    color: var(--menu-text-color);
+    padding:.5rem  1rem;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+    border:1px solid var(--menu-text-color);
+    text-align: center;
+}
+#timeline  :is(aside:hover,.timeline-selected)  {
+    cursor: pointer;
+    background-color: var(--menu-text-color);
+    color: var(--menu-background);
+}
+
 
 #map {
     top: 0;

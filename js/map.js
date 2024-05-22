@@ -18,9 +18,17 @@ const map = L.map("map",{
 //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 // }).addTo(map);
 
-let tile = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}', {
+let tile2 = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}', {
 	attribution: '&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver (Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	ext: 'png'
+	ext: 'png',
+}).addTo(map);
+
+
+var borders = L.tileLayer.wms("https://wts-tst.smhi.se/mom.map/service?", {
+    layers: 'edm:countryborders_world_4326_bw',
+    format: 'image/png',
+    transparent: true,
+    attribution: ""
 }).addTo(map);
 
 const mapSize = map.getSize();
@@ -31,4 +39,8 @@ function toPixel(coordinates){
 }
 
 
+
+// https://wts.smhi.se/mom.map?LAYERS=edm%3Acountryborders_world_4326_bw&FORMAT=image%2Fpng&TRANSPARENT=TRUE&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&SRS=EPSG%3A900913&BBOX=10018754.17,0,20037508.34,10018754.17&WIDTH=256&HEIGHT=256
+
+//https://wpt-wts-tst.smhi.se/mom.map/service?
 

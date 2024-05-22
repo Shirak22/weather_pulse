@@ -2,11 +2,15 @@
 
 
    async  function main(){
+    let selectedTime;  
+           // :: Get Data ::
+        let validTimes = await getValidTimes(); 
+        selectedTime = validTimes[0];
+         let data = await getData(selectedTime);
 
-       // :: Get Data ::
-       let data = await getData();
+         timeLine_functionality(validTimes, selectedTime);
 
-        let dataInfo = new Controls("dataInfo","dataInfo");
+         let dataInfo = new Controls("dataInfo","dataInfo");
         
         let dataInfo_content = `
                 <h2 class="sub_title">Data info</h2>
@@ -21,6 +25,9 @@
    
 
     dataInfo.setContent(dataInfo_content);
+    timelineEvents(data,selectedTime);
+
+  
 
        // ::::App initialization ::: 
        let appParams = {
@@ -68,7 +75,12 @@
 
   (async ()=> {
     if(config){
+    
         main(config);
+
+   
+    
+
     }
   })();
 
