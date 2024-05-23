@@ -21,9 +21,9 @@ var config = {
         }
     },
     windParticles: {
-            numOfParticles: 3000,
+            numOfParticles: 2000,
             numOfMeshPoints:15,
-            scale: .35,
+            scale: .4,
             color: 0xffffff,
             velocityFactor: .3,
             colorize: true, 

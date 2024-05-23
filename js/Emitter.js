@@ -39,8 +39,7 @@ class Emitter {
             let particle = new Particle(this,points); 
             this.container.addChild(particle); 
         }
-
-
+        
     }
 
     getBoundries(){

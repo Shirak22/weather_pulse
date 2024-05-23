@@ -1,6 +1,7 @@
 let emitter;
 let points;
 let mousePos; 
+let prevSelectedTime; 
 
 // Dom elements 
 let particleTail_slider;
@@ -15,15 +16,14 @@ let   ctx = new Text({
         fontFamily:"arial",
         fontSize: 20,
         fill: "#eee",
-        backgroundColor:"#eee"
     }
 }); 
-
-
 
 // setup function called one time in script.js here goes all the initializations  
 async function setup({app,data,textures}){
     console.log('%c :::Setup::: ', 'font-weight: bold; color: #ff0055');
+    prevSelectedTime = selectedTime;
+    
 
     //wind info mouse track 
     //mouse track 
@@ -32,6 +32,7 @@ async function setup({app,data,textures}){
     
     app.stage.addEventListener('pointermove', (e)=> {
     mousePos = e.global;
+
     ctx.x = mousePos.x + 10 ;   
     ctx.y = mousePos.y + 10;
      
@@ -44,22 +45,25 @@ async function setup({app,data,textures}){
         pixel:pixeledData
     }
     let blerp = bilinearInterpolation(ctx.x,ctx.y, fixedData); 
-    ctx.text = `speed: ${Math.ceil(blerp.wind_speed)} m/s \ndirection:${Math.ceil(blerp.wind_direction )}°
+
+    ctx.text = `speed: ${Math.ceil(blerp.wind_speed)} m/s \ndirection:${Math.ceil (blerp.wind_direction )}°
     `;
 
     });
 
 
     emitter = new Emitter(textures.trailTexture,app.screen.width, app.screen.height);
+
     emitter.setData(data);
     emitter.init();
-    emitter.addToStage(app);
+    app.stage.addChild(emitter.container);
+
+
 
     // draw the coordinates 
     points = new GeoPoints(textures.pointTexture, data,app);    
     points.fill();
     app.stage.addChild(ctx);
-    
 
     // Controls( inputElementID , OutputElementID )  
     particleTail_slider = new Controls("particle_tail", "particle_tail-length"); 
@@ -67,20 +71,33 @@ async function setup({app,data,textures}){
     geoPoints_checkbox = new Controls("geopoints_view", "geopoints_view"); 
     colorize_checkbox = new Controls("particle_colorize","particle_colorize");
     windAnimation_checkbox = new Controls("parameters_wind", "parameters_wind"); 
-  
 
 }
 
 
 
 // the update function is the Ticker in PIXIJS, called frequently, here goes all the code that needs to be updated all the time. 
-function update(time,app){
+async function update(time,app){
     console.log('%c :::Update::: ', 'font-weight: bold; color: #ff0055');
+
+    if(prevSelectedTime !== selectedTime){
+            console.log("changed");
+            prevSelectedTime = selectedTime;
+            emitter.freeTheContainer(); 
+            app.stage.removeChild(emitter.container);
+            data = await getData(selectedTime);
+            emitter.setData(data); 
+            emitter.init(); 
+
+        }
+
+
+
 
     if(windAnimation_checkbox.getValue()){
         if(!app.stage.children.includes(emitter.container)){
             app.stage.addChild(emitter.container);
-            console.log("the contanier not found");
+            console.log("emitter container added");
         }
         emitter.update(time.deltaTime);
         // controls

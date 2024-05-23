@@ -1,3 +1,6 @@
+let validTimes; 
+let selectedTime; 
+let timeline_days;
 
 const validTimes_URL = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/validtime.json`; 
 
@@ -23,7 +26,7 @@ const getData = async (time)=> {
     const windspeed_url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/multipoint/validtime/${validTime}/parameter/ws/leveltype/hl/level/10/data.json?downsample=${openData_settings.downSample}`
     const windSpeed_response = await fetch(windspeed_url);
     const windSpeed_data = await windSpeed_response.json();
-    
+
     let rasterPoints = {
         validTime,
         coordinates: windDirection_data.geometry.coordinates,
@@ -33,7 +36,23 @@ const getData = async (time)=> {
     }; 
 
 
-    console.log(rasterPoints);
+    let dataInfo = new Controls("dataInfo", "dataInfo");
+
+    let dataInfo_content = `
+           <h2 class="sub_title">Data info</h2>
+           <section class="sub_settings">
+               <p>date: <span>${new Date(time).getFullYear()}-${new Date(time).getMonth() + 1}-${new Date(time).getDate()}</span></p>
+           </section>
+           <section class="sub_settings">
+               <p> Total geo points: <span>${rasterPoints.coordinates.length}</span></p>
+           </section>
+           
+        `;
+
+
+       dataInfo.setContent(dataInfo_content);
+
+
     return rasterPoints;
     
 }
