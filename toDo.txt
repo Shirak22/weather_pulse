@@ -23,8 +23,8 @@ to do list -->
 
     ::::Bugs::::
         +Bug: initial position of the Mesh points is not synced with the head initial position.   (prio);
-
-
+        +Bug: pointer position info does't update with new data if timeline updated.  
+        +Bug: update the app's canvas on screen resize, 
 
 
 
