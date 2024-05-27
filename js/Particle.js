@@ -8,7 +8,7 @@ class Particle extends MeshRope {
         this.points = points;
         this.tint = this.emitter.tint; 
         this.insideBounds = false;
-        this.insideTheScreen = true; 
+        this.insideTheScreen = false; 
         this.velocityFactor = this.emitter.speedFactor;
         
         this.velocity = {
@@ -20,11 +20,18 @@ class Particle extends MeshRope {
         this.history = []; 
          this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A);
          this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A);
-    
-        this.counter = 0; 
-        this.maxLife = random(100,50);
-        this.fade = 10; 
+     
+         this.maxLife =random(200,50);
+         this.counter = random(200,25); 
+        this.fade = 0; 
         this.scale.set(this.emitter.scaleFactor);
+
+        
+        for (let i = this.points.length - 1; i > 0 ; i--) {
+            let point = this.points[i];
+            point.x = this.points[this.trailHead].x;
+            point.y = this.points[this.trailHead].y;
+        }
     }
 
 
@@ -63,21 +70,33 @@ class Particle extends MeshRope {
 
 
     movePoints(){
+       
+
         for (let i = 0; i < this.points.length - 1; i++) {
             if(this.history[i]){
                 this.points[i].x = this.history[i].x ; 
                 this.points[i].y = this.history[i].y ; 
             }         
         }
-    }
+            }
 
 
     resetHistory(){
+        for (let i = this.points.length - 1; i >= 0 ; i--) {
+            let point = this.points[i];
+            point.x = this.points[this.trailHead].x;
+            point.y = this.points[this.trailHead].y;
+        }
+
         // reset the the trail to follow the head 
         for (let i = 0; i < this.history.length; i++) {
             this.history[i].x =  this.points[this.trailHead].x; 
             this.history[i].y =  this.points[this.trailHead].y ; 
         }
+
+     
+      
+   
     }
 
     colorize(){
@@ -104,6 +123,7 @@ class Particle extends MeshRope {
         
         
         if (!this.insideBounds) {
+          
             this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A) / this.emitter.scaleFactor ;
             this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A) /  this.emitter.scaleFactor   ;
             this.resetHistory();  
@@ -111,6 +131,7 @@ class Particle extends MeshRope {
         }
 
         if(!this.insideTheScreen){
+        
             this.points[this.trailHead].x = random(this.emitter.width  , 0) / this.emitter.scaleFactor ;
             this.points[this.trailHead].y = random(this.emitter.height , 0) / this.emitter.scaleFactor ;
             this.resetHistory(); 
@@ -127,7 +148,7 @@ class Particle extends MeshRope {
             this.fade--; 
         }else if(this.counter > this.maxLife + 50){
             this.counter = 0;
-            this.fade = 7;  
+            this.fade = 10;  
             this.points[this.trailHead].x = random(this.emitter.verticalBounds.B, this.emitter.verticalBounds.A) /  this.emitter.scaleFactor ;
             this.points[this.trailHead].y = random(this.emitter.horizontalBounds.B, this.emitter.horizontalBounds.A) / this.emitter.scaleFactor ;
             

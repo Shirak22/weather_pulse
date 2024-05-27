@@ -3,7 +3,7 @@ var config = {
         app: {
             canvas_background_alpha: .2,
             maxFPS: 30,
-            minFPS: 25,
+            minFPS: 20,
         },
         data: {
             downSample: 40,

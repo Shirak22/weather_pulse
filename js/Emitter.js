@@ -8,7 +8,7 @@ class Emitter {
         this.numOfParticles = config.windParticles.numOfParticles ; 
         this.numOfMeshPoints = config.windParticles.numOfMeshPoints; 
         this.tint = config.windParticles.color;
-        this.trailHead = this.numOfMeshPoints - 1;
+        this.trailHead = this.numOfMeshPoints;
         this.speedFactor =  config.windParticles.velocityFactor;
         this.scaleFactor = config.windParticles.scale;
         this.colorizeCheck = config.windParticles.colorize;

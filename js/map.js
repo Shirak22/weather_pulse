@@ -28,7 +28,7 @@ var borders = L.tileLayer.wms("https://wts-tst.smhi.se/mom.map/service?", {
     layers: 'edm:countryborders_world_4326_bw',
     format: 'image/png',
     transparent: true,
-    attribution: ""
+    attribution: "",
 }).addTo(map);
 
 const mapSize = map.getSize();

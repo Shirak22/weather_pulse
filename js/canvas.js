@@ -2,6 +2,7 @@ let emitter;
 let points;
 let mousePos; 
 let prevSelectedTime; 
+let fields; 
 
 // Dom elements 
 let particleTail_slider;
@@ -23,8 +24,9 @@ let   ctx = new Text({
 async function setup({app,data,textures}){
     console.log('%c :::Setup::: ', 'font-weight: bold; color: #ff0055');
     prevSelectedTime = selectedTime;
-    
-
+   
+    let graphic = new Graphics();
+    app.stage.addChild(graphic);
     //wind info mouse track 
     //mouse track 
     app.stage.eventMode = "static"; 
@@ -65,6 +67,45 @@ async function setup({app,data,textures}){
     points = new GeoPoints(textures.pointTexture, data,app);    
     points.fill();
 
+
+
+    fields = new FlowFileds();
+
+
+    fields.init(app.screen.width,app.screen.height);
+    fields.setData(data);
+    let fieldsArray = fields.getGrids();
+
+
+        for (let i = 0; i < fieldsArray.length; i++) {
+            const grid = fieldsArray[i];
+
+            graphic.rect(grid.pos.col , grid.pos.row, fields.cellSize,fields.cellSize);
+
+            // graphic.fill(0xff0077);
+
+            if(grid.windSpeed > 0 && grid.windSpeed <= 2 ){
+                // graphic.stroke({color:0x00eeff,width:1});
+                graphic.fill(0x00eeff);
+            }else if(grid.windSpeed > 2 && grid.windSpeed < 5 ){
+                // graphic.stroke({color:0x00aaff,width:1})
+                graphic.fill(0x00aaff);
+            }else if(grid.windSpeed >= 5 && grid.windSpeed < 7 ){
+                // graphic.stroke({color:0xeeff77,width:1})
+                graphic.fill(0xeeff77);
+                
+            }else if(grid.windSpeed >=7 && grid.windSpeed < 10 ){
+                graphic.fill(0x00ff00);
+                
+                // graphic.stroke({color:0x00ff00,width:1})
+            }else {
+                graphic.fill(0xff0077);
+                
+                // graphic.stroke({color:0xff0077,width:1})
+            }
+            
+        }
+        graphic.alpha = .4;
     // Controls( inputElementID , OutputElementID )  
     particleTail_slider = new Controls("particle_tail", "particle_tail-length"); 
     particleSpeed_slider = new Controls("particle_speed_factor", "particle_tail-speed");
