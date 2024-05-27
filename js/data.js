@@ -17,22 +17,29 @@ const getValidTimes = async ()=> {
 const getData = async (time)=> {
     let validTime = time.replaceAll("-","").replaceAll(":","");
 
-
+    //get coordinates
+    const coordinates_url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/multipoint.json?downsample=${openData_settings.downSample}`
+    const coordinates_response = await fetch(coordinates_url);
+    const coordinates_data = await coordinates_response.json();
     //wind direction 
-    const windDirection_url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/multipoint/validtime/${validTime}/parameter/wd/leveltype/hl/level/10/data.json?downsample=${openData_settings.downSample}`
+    const windDirection_url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/multipoint/validtime/${validTime}/parameter/wd/leveltype/hl/level/10/data.json?downsample=${openData_settings.downSample}&with-geo=false`
     const windDirection_response = await fetch(windDirection_url);
     const windDirection_data = await windDirection_response.json();
     
-    const windspeed_url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/multipoint/validtime/${validTime}/parameter/ws/leveltype/hl/level/10/data.json?downsample=${openData_settings.downSample}`
+    const windspeed_url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/multipoint/validtime/${validTime}/parameter/ws/leveltype/hl/level/10/data.json?downsample=${openData_settings.downSample}&with-geo=false`
     const windSpeed_response = await fetch(windspeed_url);
     const windSpeed_data = await windSpeed_response.json();
 
+    const temp_url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/multipoint/validtime/${validTime}/parameter/t/leveltype/hl/level/2/data.json?downsample=${openData_settings.downSample}&with-geo=false`
+    const temp_response = await fetch(temp_url);
+    const temp_data = await temp_response.json();
+
     let rasterPoints = {
         validTime,
-        coordinates: windDirection_data.geometry.coordinates,
+        coordinates: coordinates_data.coordinates,
         wind_direction: windDirection_data.timeSeries[0].parameters[0].values,
         wind_speed:windSpeed_data.timeSeries[0].parameters[0].values,
-        
+        temp_data:temp_data.timeSeries[0].parameters[0].values
     }; 
 
 
@@ -52,7 +59,8 @@ const getData = async (time)=> {
 
        dataInfo.setContent(dataInfo_content);
 
-
+      
+    console.log(rasterPoints);
     return rasterPoints;
     
 }

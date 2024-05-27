@@ -50,6 +50,7 @@ async function setup({app,data,textures}){
     `;
 
     });
+    // app.stage.addChild(ctx);
 
 
     emitter = new Emitter(textures.trailTexture,app.screen.width, app.screen.height);
@@ -63,7 +64,6 @@ async function setup({app,data,textures}){
     // draw the coordinates 
     points = new GeoPoints(textures.pointTexture, data,app);    
     points.fill();
-    app.stage.addChild(ctx);
 
     // Controls( inputElementID , OutputElementID )  
     particleTail_slider = new Controls("particle_tail", "particle_tail-length"); 
