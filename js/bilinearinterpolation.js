@@ -10,16 +10,16 @@ function bilinearInterpolation(x, y, data) {
             p4 = p3;
             p3 = p2;
             p2 = p1;
-            p1 = { point: point,wind_direction: data.wind_direction[index],wind_speed:data.wind_speed[index], distSquared: distSquared };
+            p1 = { point: point,wind_direction: data.wind_direction[index],wind_speed:data.wind_speed[index],temp_data:data.temp_data[index], distSquared: distSquared };
         } else if (!p2 || distSquared < p2.distSquared) {
             p4 = p3;
             p3 = p2;
-            p2 = { point: point,wind_direction: data.wind_direction[index],wind_speed:data.wind_speed[index], distSquared: distSquared };
+            p2 = { point: point,wind_direction: data.wind_direction[index],wind_speed:data.wind_speed[index],temp_data:data.temp_data[index], distSquared: distSquared };
         } else if (!p3 || distSquared < p3.distSquared) {
             p4 = p3;
-            p3 = { point: point,wind_direction: data.wind_direction[index],wind_speed:data.wind_speed[index], distSquared: distSquared };
+            p3 = { point: point,wind_direction: data.wind_direction[index],wind_speed:data.wind_speed[index],temp_data:data.temp_data[index], distSquared: distSquared };
         } else if (!p4 || distSquared < p4.distSquared) {
-            p4 = { point: point,wind_direction: data.wind_direction[index],wind_speed:data.wind_speed[index], distSquared: distSquared };
+            p4 = { point: point,wind_direction: data.wind_direction[index],wind_speed:data.wind_speed[index],temp_data:data.temp_data[index], distSquared: distSquared };
         }
     
     });
@@ -54,6 +54,12 @@ function bilinearInterpolation(x, y, data) {
     let wind_blerp = wind_speed1 + wind_speed2 + wind_speed3 + wind_speed4 ; 
 
 
+    let temp1 = w1*p1.temp_data; 
+    let temp2 = w2*p2.temp_data; 
+    let temp3 = w3*p3.temp_data; 
+    let temp4 = w4*p4.temp_data; 
+
+    let temp_lerp = temp1 + temp2 +temp3+temp4; 
     //wind_direction 
 
     //convert from degrees to radians 
@@ -82,7 +88,8 @@ function bilinearInterpolation(x, y, data) {
         interpolatedWindDirection +=360; 
     }  
     
+    
         
     //let interpolatedWindDirection = w1 * (p1.point.windDirection) + w2 * (p2.point.windDirection) + w3 * (p3.point.windDirection) + w4 * (p4.point.windDirection);
-    return  {wind_direction:interpolatedWindDirection, wind_speed: wind_blerp};
+    return  {wind_direction:interpolatedWindDirection, wind_speed: wind_blerp, temp_data:temp_lerp};
 }

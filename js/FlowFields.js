@@ -1,6 +1,6 @@
 class FlowFileds {
     constructor(){
-        this.cellSize = 10; 
+        this.cellSize = 4; 
         this.rows=0;
         this.cols=0; 
         this.data = null;
@@ -42,10 +42,10 @@ class FlowFileds {
                         } ,
                         windDirection: blerp.wind_direction,
                         windSpeed: blerp.wind_speed,
+                        temp:blerp.temp_data
                     }
 
                     this.gridsArray.push(grid); 
-
                 }            
         }
 
