@@ -1,7 +1,6 @@
 function bilinearInterpolation(x, y, data) {
     // Find the four nearest points
     let p1, p2, p3, p4;
-
     // Calculate distances from the target point
     data.pixel.forEach((point,index) => {
         let distSquared = Math.pow(point.x - x, 2) + Math.pow(point.y - y, 2);

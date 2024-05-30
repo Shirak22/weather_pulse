@@ -38,9 +38,32 @@ function toPixel(coordinates){
     return  map.latLngToContainerPoint(latLng);
 }
 
+function toGeoPoint(x,y){
+    let point = L.point(x,y);
+    let latLng = map.containerPointToLatLng(point);
+    return latLng;
+}
+
+function areaBoundriesPixel(){
+             // get the Geo points area bounds, pnp 
+             let NE = L.latLng(northEast.lat,northEast.lng); 
+             let NEP = map.latLngToContainerPoint(NE);
+    
+             let NW = L.latLng(northWest.lat,northWest.lng); 
+             let NWP = map.latLngToContainerPoint(NW);
+    
+             let SE = L.latLng(southEast.lat,southEast.lng); 
+             let SEP = map.latLngToContainerPoint(SE);
+    
+             let SW = L.latLng(southWest.lat,southWest.lng); 
+             let SWP = map.latLngToContainerPoint(SW);
 
 
-// https://wts.smhi.se/mom.map?LAYERS=edm%3Acountryborders_world_4326_bw&FORMAT=image%2Fpng&TRANSPARENT=TRUE&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&SRS=EPSG%3A900913&BBOX=10018754.17,0,20037508.34,10018754.17&WIDTH=256&HEIGHT=256
+        return {
+            NE: NEP,
+            NW: NWP,
+            SE:SEP,
+            SW:SW
+        } 
 
-//https://wpt-wts-tst.smhi.se/mom.map/service?
-
+}
