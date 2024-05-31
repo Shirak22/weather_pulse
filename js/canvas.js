@@ -64,7 +64,7 @@ async function setup({ app, data, textures }) {
 
 
 
-    pointerMovment();
+    pointerMovment(fields);
     controls();
     geoPoints(textures.pointTexture, data, app);
 
@@ -92,6 +92,8 @@ async function update(time, app) {
         fields.update();
         emitter.setData(data);
         emitter.init(fields);
+        console.log(data);
+
         drawHeatMap(app.screen.width, app.screen.height, 40, fields.resolution, fields.cols, fields.gridsArray);
 
     }
@@ -121,7 +123,7 @@ async function update(time, app) {
 
     // temp checkbox 
     if(temp_checkbox.getValue()){
-        drawHeatMap(app.screen.width, app.screen.height, 10, fields.resolution, fields.cols, fields.gridsArray);
+        drawHeatMap(app.screen.width, app.screen.height, 5, fields.resolution, fields.cols, fields.gridsArray);
 
     }else {
         ctx.clear();
@@ -153,7 +155,7 @@ function onMapMoveEnd() {
 
 //------------------------------------------------------------------
 
-function pointerMovment() {
+function pointerMovment(fields) {
 
     //mouse pointer
     pointer = new Graphics();
@@ -161,13 +163,18 @@ function pointerMovment() {
     app.stage.addEventListener("pointermove", (e) => {
 
         mousePos = e.global;
+        let fieldsPosx =   Math.floor(mousePos.x / fields.resolution); //convert to fields resolution 
+        let fieldsPosy = Math.floor(mousePos.y / fields.resolution); //convert to fields resolution 
 
+            let index = fieldsPosx + fieldsPosy * fields.cols;
+            let temp = fields.gridsArray[index].blerp.temp_data;
+            let ws = fields.gridsArray[index].blerp.wind_speed;
+            let wd = fields.gridsArray[index].blerp.wind_direction;
 
-        // let index =  coords.lng + coords.lat * fields.res; 
-        // pointer.clear();
-        // pointer.rect(arr[index].pos.col,arr[index].pos.row,fields.cellSize,fields.cellSize); 
-        // text.text = `WD: ${(arr[index].windDirection).toFixed(3)}°   \n WS: ${(arr[index].windSpeed).toFixed(1)} m/s \n T: ${(arr[index].temp).toFixed(2)}˚C `;
-        // pointer.fill();
+        pointer.clear();
+        pointer.rect(fields.gridsArray[index].pos.x, fields.gridsArray[index].pos.y,fields.resolution,fields.resolution); 
+        text.text = `WD: ${wd.toFixed(3)}°   \n WS: ${(ws).toFixed(1)} m/s \n T: ${(temp).toFixed(2)}˚C `;
+        pointer.fill();
 
     });
 }
@@ -216,7 +223,7 @@ function drawHeatMap(width, height, res, fieldsRes, fieldsCols, gridsArray) {
             if (temp < 10) {
                 color = 0x0044ff;
             }else if (temp > 10 && temp < 12) {
-                color = 0xff0099;
+                color = 0xff0000;
             } else if (temp >= 12 && temp < 15) {
                 color = 0xff6655;
             } else if (temp >= 15 && temp < 17) {
@@ -230,9 +237,11 @@ function drawHeatMap(width, height, res, fieldsRes, fieldsCols, gridsArray) {
             } else if (temp >= 23 && temp < 27) {
                 color = 0xffff99;
             }else if(temp > 30){
-                color = 0xff0000
+                color = 0xff0099
             }
             ctx.stroke({ color });
+            // ctx.fill( color );
+            ctx.alpha = .4
 
 
         }
