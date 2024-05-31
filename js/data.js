@@ -39,7 +39,7 @@ const getData = async (time)=> {
         coordinates: coordinates_data.coordinates,
         wind_direction: windDirection_data.timeSeries[0].parameters[0].values,
         wind_speed:windSpeed_data.timeSeries[0].parameters[0].values,
-        temp_data:temp_data.timeSeries[0].parameters[0].values
+        temp_data:temp_data.timeSeries[0].parameters[0].values,
     }; 
 
 
@@ -60,7 +60,6 @@ const getData = async (time)=> {
        dataInfo.setContent(dataInfo_content);
 
       
-    console.log(rasterPoints);
     return rasterPoints;
     
 }

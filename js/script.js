@@ -60,7 +60,7 @@ async function main(config, data) {
          selectedTime = timeline_days[0].time;
             timeline_events(selectedTime);
             let data = await getData(selectedTime);
-        main(config, data);
+            main(config, data);
 
 
 
