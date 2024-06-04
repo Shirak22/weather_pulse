@@ -2,8 +2,9 @@ function bilinearInterpolation(x, y, data) {
     // Find the four nearest points
     let p1, p2, p3, p4;
     // Calculate distances from the target point
-    data.pixel.forEach((point,index) => {
-        let distSquared = Math.pow(point.x - x, 2) + Math.pow(point.y - y, 2);
+    for (let index = 0; index < data.pixel.length; index++) {
+        const point = data.pixel[index];
+        let distSquared = (point.x - x)*(point.x - x) + (point.y - y)*(point.y - y);
         
         if (!p1 || distSquared < p1.distSquared) {
             p4 = p3;
@@ -20,9 +21,9 @@ function bilinearInterpolation(x, y, data) {
         } else if (!p4 || distSquared < p4.distSquared) {
             p4 = { point: point,wind_direction: data.wind_direction[index],wind_speed:data.wind_speed[index],temp_data:data.temp_data[index], distSquared: distSquared };
         }
-    
-    });
 
+        
+    }
 
     // Ensure all points are found
     if (!p1 || !p2 || !p3 || !p4) {

@@ -1,6 +1,6 @@
 class Fields {
-    constructor(){
-        this.resolution = 5; 
+    constructor(resolution){
+        this.resolution = resolution ; 
         this.cols = 0; 
         this.rows = 0;
         this.data; 
@@ -18,13 +18,10 @@ class Fields {
     }
     
     updateData(){
-        let pixel = this.data.coordinates.map(coord => {
+         this.data.pixel = this.data.coordinates.map(coord => {
             return toPixel(coord);
         });    
-        this.data = {
-            ...this.data,
-            pixel
-        }
+        
 
 
     }

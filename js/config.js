@@ -6,7 +6,7 @@ var config = {
             minFPS: 20,
         },
         data: {
-            downSample: 40,
+            downSample: 20,
         },
         map: {
             initialZoom: 5,

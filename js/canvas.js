@@ -5,8 +5,10 @@ let fields;
 let mousePos;
 let pointer;
 let ctx;
-let heatmap; 
-
+// let heatmap; 
+let heatmapRes = 30;
+let fieldsResolution = 5;
+let heatMapAlpha = .4
 // Dom elements 
 let particleTail_slider;
 let particleSpeed_slider;
@@ -38,18 +40,22 @@ async function setup({ app, data, textures }) {
     app.stage.addChild(ctx);
 
 
-
-    fields = new Fields();
+    
+    fields = new Fields(fieldsResolution);
     fields.setData(data);
     fields.init(app.screen.width, app.screen.height);
     fields.updateData();
     fields.createFields();
-    
-    // drawHeatMap(app.screen.width, app.screen.height, 30, fields.resolution, fields.cols, fields.gridsArray);
+
+   
+        
+
     // const pixelTexture = await Texture.WHITE;
-    // heatmap = new Heatmap(30,pixelTexture,fields);
+    // heatmap = new Heatmap(5,pixelTexture,fields);
     // heatmap.init(app.screen.width, app.screen.height); 
     // heatmap.draw(); 
+
+    // app.stage.addChild(heatmap.container);
     
     // console.log(heatmap);
 
@@ -92,9 +98,8 @@ async function update(time, app) {
         fields.update();
         emitter.setData(data);
         emitter.init(fields);
-        console.log(data);
 
-        drawHeatMap(app.screen.width, app.screen.height, 40, fields.resolution, fields.cols, fields.gridsArray);
+        drawHeatMap(app.screen.width, app.screen.height, heatmapRes, fields.resolution, fields.cols, fields.gridsArray);
 
     }
 
@@ -120,14 +125,12 @@ async function update(time, app) {
     // Geo points control 
     points.draw(geoPoints_checkbox.getValue());
     
-
-    // temp checkbox 
-    if(temp_checkbox.getValue()){
-        drawHeatMap(app.screen.width, app.screen.height, 5, fields.resolution, fields.cols, fields.gridsArray);
-
-    }else {
+    if (temp_checkbox.getValue()) {
+        drawHeatMap(app.screen.width, app.screen.height, heatmapRes, fields.resolution, fields.cols, fields.gridsArray);
+    } else {
         ctx.clear();
     }
+   
 
 }
 
@@ -146,9 +149,11 @@ function onMapMoveEnd() {
     // // console.log('%c :::On map move end ::: ', 'font-weight: bold; color: #ff0055');
     fields.updateData();
     fields.update();
-    ctx.clear();
-    drawHeatMap(app.screen.width, app.screen.height, 40, fields.resolution, fields.cols, fields.gridsArray);
-
+    // ctx.clear();
+    // drawHeatMap(app.screen.width, app.screen.height, 40, fields.resolution, fields.cols, fields.gridsArray);
+    // heatmap.update(fields);
+    // temp checkbox 
+   
 }
 
 
@@ -167,9 +172,9 @@ function pointerMovment(fields) {
         let fieldsPosy = Math.floor(mousePos.y / fields.resolution); //convert to fields resolution 
 
             let index = fieldsPosx + fieldsPosy * fields.cols;
-            let temp = fields.gridsArray[index].blerp.temp_data;
-            let ws = fields.gridsArray[index].blerp.wind_speed;
-            let wd = fields.gridsArray[index].blerp.wind_direction;
+            let temp = fields.gridsArray[index]?.blerp.temp_data;
+            let ws = fields.gridsArray[index]?.blerp.wind_speed;
+            let wd = fields.gridsArray[index]?.blerp.wind_direction;
 
         pointer.clear();
         pointer.rect(fields.gridsArray[index].pos.x, fields.gridsArray[index].pos.y,fields.resolution,fields.resolution); 
@@ -239,9 +244,9 @@ function drawHeatMap(width, height, res, fieldsRes, fieldsCols, gridsArray) {
             }else if(temp > 30){
                 color = 0xff0099
             }
-            ctx.stroke({ color });
-            // ctx.fill( color );
-            ctx.alpha = .4
+            // ctx.stroke({ color });
+            ctx.fill( color );
+            ctx.alpha = heatMapAlpha; 
 
 
         }

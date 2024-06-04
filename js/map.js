@@ -27,6 +27,7 @@ let tile2 = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z
 var borders = L.tileLayer.wms("https://wts-tst.smhi.se/mom.map/service?", {
     layers: 'edm:countryborders_world_4326_bw',
     format: 'image/png',
+    zIndex: 4000,
     transparent: true,
     attribution: "",
 }).addTo(map);
