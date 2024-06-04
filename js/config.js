@@ -1,15 +1,12 @@
 var config = {
     general_settings: {
-        dev:{
-            consoleLog_enable: false,
-        },
         app: {
-            canvas_background_alpha: 0.3,
+            canvas_background_alpha: .2,
             maxFPS: 30,
-            minFPS: 25,
+            minFPS: 20,
         },
         data: {
-            downSample: 40,
+            downSample: 20,
         },
         map: {
             initialZoom: 5,
@@ -24,10 +21,18 @@ var config = {
         }
     },
     windParticles: {
-            numOfParticles: 3000,
-            numOfMeshPoints:30,
-            scale: .45,
+            numOfParticles: 2000,
+            numOfMeshPoints:15,
+            scale: .4,
             color: 0xffffff,
+            velocityFactor: .3,
+            colorize: true, 
+
     },
+    geoPoints: {
+        size: 2,
+        color:0x00ffff,
+        show: true,
+    }
 
 }

@@ -1,4 +1,4 @@
-2024-05-07
+2024-05-23
 to do list --> 
 
     ::::Fixed:::: 
@@ -6,30 +6,44 @@ to do list -->
         +create age for every particle with fade in, fade out effect. :::: fixed ::::
         +contain all the particles in the screen boundries. :::: fixed ::::
         +create screen boundries to make the render in screen bounds. :::: fixed ::::
-        +fix the size of the particles to be smaller (adjust the size from the config.js, windParticles -> scale );    
+        +fix the size of the particles to be smaller (adjust the size from the config.js, windParticles -> scale );    :::: fixed ::::
 
-
-    :::: to be fixed :::: 
-        +make a reset method for the emitter. to be resat after map move or scroll. 
-
-    :::: add more features :::: 
-
-        +add wind speed parameter, visualaizing by adding the wind speed as particles velocity. 
-        +make a simple UI 
-        +add more timeApproved steps to the UI and maybe a simple slider. 
-        +get more parameters and visualize them on the map. 
-        
+        +add wind speed parameter, visualaizing by adding the wind speed as particles velocity. :::: fixed ::::
+        +winds particles direction correction :::: fixed ::::
+        +make a simple UI :::: fixed ::::
+        +add simple Timeline  :::: fixed ::::
+        +make a reset method for the particle emitter (.freeTheContainer()).
+        +Bug: initial position of the Mesh points is not synced with the head initial position.   (prio);
+        +Bug: pointer position info does't update with new data if timeline updated.  
+        +flow fields (fields of vectors ) has been created. 
 
 
 
 
-    !!important!!    +Optimize the performence of the interpolation (Now it runs 60x per second for every particle !!!expensive function!!! )
-                        - hint: make grids, every grid has wind interploated angel. based on the grids resoloution. 
+
+ :::: to be fixed :::: 
+    !!important!!    +Optimize the performence of the interpolation (Now it runs 30x per second for every particle !!!expensive function!!! )
+                        - hint: make grids, every grid has wind interploated angel. based on the grids resoloution.
+
+
 
 
     ::::Bugs::::
+        +Bug: update the app's canvas on screen resize, 
 
-        +Bug: initial position of the Mesh points is not synced with the head initial position.   (prio);
+
+
+    :::: add more features :::: 
+        +get more parameters and visualize them on the map. 
+
+
+
+
+
+
+
+ 
+   
      
     
 

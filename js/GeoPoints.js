@@ -2,31 +2,19 @@ class GeoPoint extends Sprite {
     constructor(GeoPoints,coords){
         super(GeoPoints.texture); 
         this.GeoPoints = GeoPoints; 
-        this.tint = this.GeoPoints.tint;
+        this.tint = config.geoPoints.color;
         this.coords = coords; 
-        this.visible = false;
-        this.scale.set(1); 
+        this.visible = config.geoPoints.show;
+        this.scale.set(config.geoPoints.size); 
         this.pixelPos; 
 
     }
 
 
-    draw(){
-       this.visible = true;
+    update(){
         this.pixelPos = toPixel(this.coords); 
         this.x = this.pixelPos.x ; 
         this.y = this.pixelPos.y;
-       
-    }
-
-
-    update() {
-        this.visible = true;
-        this.pixelPos = toPixel(this.coords); 
-        this.x = this.pixelPos.x ; 
-        this.y = this.pixelPos.y;
-
-
     }
 
 }
@@ -38,8 +26,8 @@ class GeoPoints {
         this.texture = texture;
         this.data = data; 
         this.app = app;
-        this.tint = 0xff0033; 
         this.pointsPool = new Container();
+        this.visibility = false; 
         this.screenBounds = {
             x:this.app.screen.width,
             y: this.app.screen.height,
@@ -57,20 +45,13 @@ class GeoPoints {
         this.app.stage.addChild(this.pointsPool); 
     }
 
-
-    draw(){
-        this.fill();
-        for(let i=0; i < this.pointsPool.children.length; i++){
-            this.pointsPool.children[i].draw();
-        }
-
-
+    draw(bool) {
+        this.visibility = bool; 
+            for (let i = 0; i < this.pointsPool.children.length; i++) {
+                this.pointsPool.children[i].visible = this.visibility;
+                this.pointsPool.children[i].update();
+            }
+      
     }
 
-    update(){
-        for(let i=0; i < this.pointsPool.children.length; i++){
-            this.pointsPool.children[i].update(); 
-        }
-
-    }
 }

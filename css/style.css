@@ -1,3 +1,8 @@
+:root {
+    --menu-background: rgba(0 , 0, 0, .5);
+    --menu-text-color: #eee;
+}
+
 *{
     margin: 0;
     padding: 0;
@@ -7,13 +12,132 @@
 
 body {
     height:100svh; 
-    background: #444
+    font-family: sans-serif;
+    
 }
 
+a,li{
+    text-decoration: none;
+    color: var(--menu-text-color);
+
+}
+li{
+    width: 100%;
+
+}
+ul {
+    list-style: none;
+    width: 100%;
+
+}
+
+
+.header {
+    position: fixed;
+    width: 100%;
+    z-index: 2;
+    padding: 1rem;
+}
+.header .smhi__logo {
+    display: block;
+    filter: invert();
+    margin: 1rem;
+
+}
+
+.sidebar_right{
+    background: var(--menu-background);
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translate(0,-50%);
+    display: flex;
+    flex-direction: column ;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: .3rem;
+    min-width: 10rem;
+    min-height: 15rem;
+    text-transform: capitalize;
+    font-size: 1.2rem;
+
+}
+.sidebar_right .title {
+    color: var(--menu-text-color);
+    margin: 1rem;
+    font-size: 1.4rem;
+
+}
+.sidebar_right .sidebar__menu-child {
+    padding:1rem;
+}
+.sidebar_right .sidebar__menu-child .sub_title {
+    font-size: 1.3rem;
+}
+.sidebar__scale{
+    background: var(--menu-text-color);
+    
+    z-index: 2;
+    width: 2rem;
+    position: absolute;
+    bottom: 2rem;
+    left: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.sidebar__scale aside {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    width: 100%;
+    background-color: brown;
+    height: 2rem;
+    text-align: center;
+    padding: .3rem 1rem;
+    color: var(--menu-text-color);
+}
+#timeline {
+    background: var(--menu-background);
+    position:absolute; 
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%,0);
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    z-index: 2;    
+}
+
+#timeline  aside {
+    color: var(--menu-text-color);
+    padding:.5rem  1rem;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+    border:1px solid var(--menu-text-color);
+    text-align: center;
+}
+#timeline  :is(aside:hover,.timeline-selected)  {
+    cursor: pointer;
+    background-color: var(--menu-text-color);
+    color: var(--menu-background);
+}
+
+
 #map {
+    top: 0;
+    left: 0;
     height: 100%;
     width:100%;
-    position: relative;
+    z-index: 1;
+    position: absolute;
 }
 
 #myCanvas{
@@ -22,3 +146,4 @@ body {
     top: 0;
     left: 0;
 }
+
