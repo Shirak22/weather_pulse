@@ -1,6 +1,6 @@
 # Weather Pulse
 
-This live demo is available at: https://fun.swehost.dev/weather_pulse/
+This live demo is available at: [https://swehost.dev/weather-pulse/](https://swehost.dev/weather-pulse/) 
 
 ## Project Overview
 
