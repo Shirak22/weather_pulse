@@ -8,12 +8,12 @@ import {
 } from "../pixi.js";
 import { config } from "../config.js";
 import { random } from "../utils/math.js";
+import { speedToTint } from "./windColor.js";
 
-function speedTint(speed) {
-    if (speed < 2) return 0x99ffff;
-    if (speed < 5) return 0xffaaff;
-    if (speed < 10) return 0xffaa00;
-    return 0xffff00;
+function resolveParticleCount() {
+    const cfg = config.windParticles;
+    const mobile = window.matchMedia("(max-width: 899px)").matches;
+    return mobile ? (cfg.numOfParticlesMobile ?? 1800) : cfg.numOfParticles;
 }
 
 /**
@@ -39,10 +39,12 @@ export class GpuWindParticles {
         this.windField = windField;
         this.mapView = mapView;
 
-        this.count = config.windParticles.numOfParticles;
+        this.count = resolveParticleCount();
         this.speedFactor = config.windParticles.velocityFactor;
         this.colorizeCheck = config.windParticles.colorize;
         this.particleScale = config.windParticles.scale;
+        this.speedMin = config.windParticles.colorizeMinSpeed ?? 0;
+        this.speedMax = config.windParticles.colorizeMaxSpeed ?? 20;
         this.trailPersist = 0.92;
 
         this.x = new Float32Array(this.count);
@@ -195,7 +197,9 @@ export class GpuWindParticles {
             const p = particles[i];
             p.x = x[i];
             p.y = y[i];
-            p.tint = this.colorizeCheck ? speedTint(s.speed) : 0xffffff;
+            p.tint = this.colorizeCheck
+                ? speedToTint(s.speed, this.speedMin, this.speedMax)
+                : 0xffffff;
 
             const lifeT = age[i] / maxAge[i];
             p.alpha = lifeT > 0.7 ? 0.9 * (1 - (lifeT - 0.7) / 0.3) : 0.9;

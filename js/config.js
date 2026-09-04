@@ -8,7 +8,7 @@ export const config = {
         },
         data: {
             // SMHI: 1 = full grid, 20 = every 20th cell. Lower = sharper flow, larger download.
-            downSample: 5,
+            downSample: 1,
         },
         map: {
             initialZoom: 5,
@@ -24,11 +24,16 @@ export const config = {
     },
     windParticles: {
         numOfParticles: 8000,
+        // Phones / narrow viewports — denser screen, weaker GPUs
+        numOfParticlesMobile: 1800,
         numOfMeshPoints: 15,
         scale: 2.5,
         color: 0xffffff,
         velocityFactor: 0.45,
         colorize: true,
+        // Colorize ramp: calm (m/s) → strong gale
+        colorizeMinSpeed: 0,
+        colorizeMaxSpeed: 20,
         fieldCellSize: 2,
     },
     geoPoints: {
@@ -37,8 +42,10 @@ export const config = {
         show: false,
     },
     tempLayer: {
-        resolution: 20,
-        alpha: 0.4,
+        // Absolute °C range for blue→red ramp (Nordic-friendly).
+        minTemp: -15,
+        maxTemp: 35,
+        alpha: 0.5,
     },
     fields: {
         resolution: 4,

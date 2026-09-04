@@ -1,5 +1,5 @@
 /**
- * Coarse screen grid for pointer + temperature overlay.
+ * Coarse screen grid for pointer hover cell highlight.
  * Samples WindField (O(1) per cell) — no irregular SMHI search.
  */
 export class Fields {

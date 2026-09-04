@@ -31,7 +31,6 @@ export class App {
         this.windParticles = null;
         this.geoPoints = null;
         this.tempLayer = null;
-        this.heatmapGfx = null;
         this.pointerGfx = null;
         this.pointerText = null;
 
@@ -89,15 +88,14 @@ export class App {
         this.pixi.stage.eventMode = "static";
         this.pixi.stage.hitArea = this.pixi.screen;
 
-        this.heatmapGfx = new Graphics();
-        this.pixi.stage.addChild(this.heatmapGfx);
-        this.tempLayer = new TempLayer(this.heatmapGfx);
-
         this.windField = new WindField(
             this.pixi.screen.width,
             this.pixi.screen.height,
             config.windParticles.fieldCellSize
         );
+
+        this.tempLayer = new TempLayer(this.pixi);
+        this.tempLayer.setWindField(this.windField);
 
         this.fields = new Fields(config.fields.resolution, this.windField);
         this.fields.init(this.pixi.screen.width, this.pixi.screen.height);
@@ -142,6 +140,7 @@ export class App {
         }
         this.windParticles.setWindField(this.windField);
         this.windParticles.refreshBounds();
+        this.tempLayer.setWindField(this.windField);
         this.tempLayer.markDirty();
     }
 
@@ -176,11 +175,7 @@ export class App {
             this.#rebuildField();
             this.windParticles.clearTrails();
 
-            if (this._windVisible) {
-                if (!this.pixi.stage.children.includes(this.windParticles.view)) {
-                    this.pixi.stage.addChildAt(this.windParticles.view, 0);
-                }
-            }
+            if (this._windVisible) this.#ensureWindOnStage();
 
             if (!this.geoPoints) {
                 this.geoPoints = new GeoPoints(
@@ -190,6 +185,8 @@ export class App {
                     this.mapView
                 );
                 this.geoPoints.fill();
+            } else {
+                this.geoPoints.setData(this.data);
             }
             this.geoPoints.draw(this._geoVisible);
 
@@ -211,6 +208,7 @@ export class App {
         if (!this.data) return;
         this.#rebuildField();
         this.windParticles.clearTrails();
+        this.geoPoints?.setData(this.data);
         this.geoPoints?.refreshPositions();
     }
 
@@ -236,9 +234,7 @@ export class App {
         this._windVisible = windOn;
 
         if (windOn) {
-            if (!this.pixi.stage.children.includes(this.windParticles.view)) {
-                this.pixi.stage.addChildAt(this.windParticles.view, 0);
-            }
+            this.#ensureWindOnStage();
             this.windParticles.setTailLength(this.controls.particleTail.getValue());
             this.windParticles.setSpeed(this.controls.particleSpeed.getValue());
             this.windParticles.setColorize(this.controls.colorize.getValue());
@@ -256,11 +252,20 @@ export class App {
         const tempOn = Boolean(this.controls.temp.getValue());
         this.tempLayer.setVisible(tempOn);
         this.dataInfo.setScaleVisible(tempOn);
-        this.tempLayer.drawIfNeeded(
-            this.pixi.screen.width,
-            this.pixi.screen.height,
-            this.fields
-        );
+        this.tempLayer.drawIfNeeded();
+    }
+
+    /** Temp underlay at bottom; wind particles just above it. */
+    #ensureWindOnStage() {
+        const stage = this.pixi.stage;
+        const wind = this.windParticles.view;
+        if (stage.children.includes(wind)) return;
+
+        let idx = 0;
+        if (this.tempLayer?.view && stage.children.includes(this.tempLayer.view)) {
+            idx = stage.getChildIndex(this.tempLayer.view) + 1;
+        }
+        stage.addChildAt(wind, Math.min(idx, stage.children.length));
     }
 
     #onPointerMove(e) {

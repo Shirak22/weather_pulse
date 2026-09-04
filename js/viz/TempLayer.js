@@ -1,65 +1,96 @@
+import { Sprite, Texture, BufferImageSource } from "../pixi.js";
 import { config } from "../config.js";
-
-function tempToColor(temp) {
-    if (temp < 10) return 0x0044ff;
-    if (temp < 12) return 0xff0000;
-    if (temp < 15) return 0xff6655;
-    if (temp < 17) return 0xff7744;
-    if (temp < 19) return 0xff9933;
-    if (temp < 21) return 0xffaa22;
-    if (temp < 23) return 0xffee11;
-    if (temp < 27) return 0xffff99;
-    if (temp > 30) return 0xff0099;
-    return 0xffffff;
-}
+import { tempToRgb } from "./tempColor.js";
 
 /**
- * Temperature overlay drawn into a shared Graphics.
- * Dirty-flagged: redraw only when data/map/visibility changes — never every ticker frame.
+ * Temperature heatmap from WindField (already baked from full SMHI multipoint).
+ * One GPU texture + Sprite — no per-cell Graphics, no Fields grid.
  */
 export class TempLayer {
-    constructor(graphics, options = {}) {
-        this.gfx = graphics;
-        this.res = options.resolution ?? config.tempLayer.resolution;
+    /**
+     * @param {{ stage: *, screen: { width: number, height: number } }} app
+     */
+    constructor(app, options = {}) {
+        this.app = app;
         this.alpha = options.alpha ?? config.tempLayer.alpha;
+        this.tMin = options.minTemp ?? config.tempLayer.minTemp;
+        this.tMax = options.maxTemp ?? config.tempLayer.maxTemp;
         this.visible = false;
+        this.dirty = true;
+        /** @type {import("./WindField.js").WindField | null} */
+        this.windField = null;
+
+        this.view = new Sprite();
+        this.view.eventMode = "none";
+        this.view.visible = false;
+        this.view.alpha = this.alpha;
+        this._texture = null;
+
+        if (!app.stage.children.includes(this.view)) {
+            app.stage.addChildAt(this.view, 0);
+        }
+    }
+
+    setWindField(windField) {
+        this.windField = windField;
         this.dirty = true;
     }
 
     setVisible(visible) {
         if (this.visible === visible) return;
         this.visible = visible;
+        this.view.visible = visible;
         this.dirty = true;
-        if (!visible) this.gfx.clear();
+        if (!visible) return;
     }
 
     markDirty() {
         this.dirty = true;
     }
 
-    drawIfNeeded(width, height, fields) {
-        if (!this.visible || !this.dirty) return;
+    drawIfNeeded() {
+        if (!this.visible || !this.dirty || !this.windField) return;
+        this.#bake();
+        this.dirty = false;
+    }
 
-        this.gfx.clear();
-        const cols = Math.floor(width / this.res);
-        const rows = Math.floor(height / this.res);
-        const { resolution: fieldsRes, cols: fieldsCols, gridsArray } = fields;
+    #bake() {
+        const field = this.windField;
+        const { cols, rows, temp, weight, width, height } = field;
+        const buf = new Uint8ClampedArray(cols * rows * 4);
+        const tMin = this.tMin;
+        const tMax = this.tMax;
+        const alpha = Math.round(Math.min(1, Math.max(0, this.alpha)) * 255);
 
-        for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-                const fieldsPosx = (col * this.res) / fieldsRes;
-                const fieldsPosy = (row * this.res) / fieldsRes;
-                const index = fieldsPosx + fieldsPosy * fieldsCols;
-                const cell = gridsArray[index];
-                if (!cell) continue;
-
-                const color = tempToColor(cell.blerp.temp_data);
-                this.gfx.rect(col * this.res, row * this.res, this.res, this.res);
-                this.gfx.fill(color);
-                this.gfx.alpha = this.alpha;
+        for (let i = 0; i < cols * rows; i++) {
+            const o = i * 4;
+            if (weight[i] < 1e-6) {
+                buf[o + 3] = 0;
+                continue;
             }
+            const { r, g, b } = tempToRgb(temp[i], tMin, tMax);
+            buf[o] = r;
+            buf[o + 1] = g;
+            buf[o + 2] = b;
+            buf[o + 3] = alpha;
         }
 
-        this.dirty = false;
+        if (this._texture) this._texture.destroy(true);
+
+        const source = new BufferImageSource({
+            resource: buf,
+            width: cols,
+            height: rows,
+        });
+        this._texture = new Texture({ source });
+        this._texture.source.scaleMode = "linear";
+        this._texture.source.addressModeU = "clamp-to-edge";
+        this._texture.source.addressModeV = "clamp-to-edge";
+        this._texture.source.autoGenerateMipmaps = false;
+
+        this.view.texture = this._texture;
+        this.view.width = width;
+        this.view.height = height;
+        this.view.alpha = 1; // alpha baked into texels; keep sprite opaque
     }
 }

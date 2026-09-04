@@ -1,4 +1,6 @@
 import { Controls } from "./Controls.js";
+import { config } from "../config.js";
+import { tempLegendStops } from "../viz/tempColor.js";
 
 /** Sidebar data-info panel + color scale visibility. */
 export class DataInfoPanel {
@@ -13,44 +15,38 @@ export class DataInfoPanel {
         const d = new Date(isoTime);
         const dateStr = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
         this.panel.setContent(`
-           <h2 class="sub_title">Data info</h2>
-           <section class="sub_settings">
-               <p>date: <span>${dateStr}</span></p>
-           </section>
-           <section class="sub_settings">
-               <p> Total geo points: <span>${pointCount}</span></p>
-           </section>
+           <h2 class="settings-block__title">Data info</h2>
+           <div class="setting-row">
+               <p>Date <span class="setting-value">${dateStr}</span></p>
+           </div>
+           <div class="setting-row">
+               <p>Geo points <span class="setting-value">${pointCount.toLocaleString()}</span></p>
+           </div>
         `);
     }
 
     setScaleVisible(visible) {
         if (!this.scaleEl) return;
-        this.scaleEl.style.display = visible ? "flex" : "none";
+        this.scaleEl.hidden = !visible;
     }
 
     #drawScale() {
         if (!this.scaleEl) return;
-        const colors = [
-            "#0044ff",
-            "#ff0000",
-            "#ff6655",
-            "#ff7744",
-            "#ff9933",
-            "#ffaa22",
-            "#ffee11",
-            "#ffff99",
-            "#ff0099",
-        ];
-        this.scaleEl.innerHTML = `
-            <p class="scale_unit"> °C </p>
-            <aside style="background: ${colors[7]}">&gt;30</aside>
-            <aside style="background: ${colors[6]}">25</aside>
-            <aside style="background: ${colors[5]}">22</aside>
-            <aside style="background: ${colors[4]}">20</aside>
-            <aside style="background: ${colors[3]}">18</aside>
-            <aside style="background: ${colors[2]}">16</aside>
-            <aside style="background: ${colors[1]}">11</aside>
-            <aside style="background: ${colors[0]}">&lt;10</aside>
-        `;
+        const { minTemp, maxTemp } = config.tempLayer;
+        const stops = tempLegendStops(minTemp, maxTemp);
+        const rows = stops
+            .map(
+                (s, i) =>
+                    `<aside style="background: ${s.css}">${
+                        i === 0
+                            ? `>${Math.round(maxTemp)}`
+                            : i === stops.length - 1
+                              ? `<${Math.round(minTemp)}`
+                              : s.label
+                    }</aside>`
+            )
+            .join("");
+        this.scaleEl.innerHTML = `<p class="scale_unit">°C</p>${rows}`;
+        this.scaleEl.hidden = true;
     }
 }

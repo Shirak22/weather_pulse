@@ -2,12 +2,17 @@ import { config } from "./config.js";
 import { SmhiClient } from "./data/SmhiClient.js";
 import { MapView } from "./map/MapView.js";
 import { App } from "./app/App.js";
+import { ThemeController } from "./ui/ThemeController.js";
+import { PanelController } from "./ui/PanelController.js";
 
 /**
  * Entry point — creates owners and starts the app.
  * Learn from here: dependency injection into App (map + data client).
  */
 async function main() {
+    new ThemeController(document.getElementById("theme-toggle"));
+    new PanelController();
+
     document.body.classList.add("app-loading");
     const mapView = new MapView("map");
     const smhi = new SmhiClient(config.general_settings.data.downSample);
