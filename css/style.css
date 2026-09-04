@@ -147,3 +147,74 @@ ul {
     left: 0;
 }
 
+.status-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(8, 12, 18, 0.82);
+    color: #eee;
+    text-align: center;
+}
+
+.status-overlay[hidden] {
+    display: none !important;
+}
+
+.status-overlay__card {
+    width: min(90vw, 22rem);
+    padding: 1.5rem 1.75rem;
+    border-radius: 0.4rem;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.status-overlay__title {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+}
+
+.status-overlay__detail {
+    font-size: 0.95rem;
+    color: #b8c0cc;
+    min-height: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.status-overlay__bar {
+    height: 0.45rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+}
+
+.status-overlay__bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #4eb3f5, #e8f4ff);
+    transition: width 0.25s ease;
+}
+
+.status-overlay__percent {
+    margin-top: 0.65rem;
+    font-size: 0.85rem;
+    color: #9aa7b8;
+}
+
+.status-overlay--error .status-overlay__card {
+    background: rgba(90, 18, 18, 0.85);
+    border-color: rgba(255, 120, 120, 0.35);
+}
+
+body.app-loading .sidebar_right,
+body.app-loading #timeline,
+body.app-loading .sidebar__scale,
+body.app-loading .header {
+    pointer-events: none;
+    opacity: 0.35;
+}
+

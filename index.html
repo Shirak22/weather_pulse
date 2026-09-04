@@ -8,122 +8,79 @@
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-        <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.x/dist/pixi.min.js"></script>
-        <link rel="stylesheet" href="css/style.css">
-    <title>Weather Pulse </title>
+    <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.x/dist/pixi.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Weather Pulse</title>
 </head>
 
-<body>
-    
-        
-    
-        <header class="header">
-            <img class="smhi__logo" src="./assets/smhi-logo-120.png" alt="SMHI">
-        </header>
+<body class="app-loading">
 
-        <main >
-            <section class="sidebar_right">
-                <h1 class="title">Settings</h1>
-                <ul class="sidebar__menu">
-                    <li id="dataInfo" class="sidebar__menu-child">
-                       
-                    </li>
+    <header class="header">
+        <img class="smhi__logo" src="./assets/smhi-logo-120.png" alt="SMHI">
+    </header>
 
-                    <li class="sidebar__menu-child">
-                        <h2 class="sub_title">wind animation</h2>
-                        <section class="sub_settings">
-                            <label for="particle_tail">tail length <span id="particle_tail-length"></span></label>
-                            <input type="range" id="particle_tail" min="10" max="100" step="10" value="10">
-                        </section>
-                        <section class="sub_settings">
-                            <label for="particle_speed_factor">speed factor <span id="particle_tail-speed"></span> </label>
-                            <input type="range" id="particle_speed_factor" min="1" max="100" value="8">
-                            <p id="particle_tail-speed"></p>
-                        </section>
-                        <section class="sub_settings">
-                            <label for="particle_colorize">colorize</label>
-                            <input type="checkbox" id="particle_colorize" unchecked >
-                        </section>
-                    </li>
+    <main>
+        <div id="status-overlay" class="status-overlay status-overlay--loading">
+            <div class="status-overlay__card">
+                <p class="status-overlay__title">Loading Weather Pulse</p>
+                <p class="status-overlay__detail">Starting…</p>
+                <div class="status-overlay__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <div class="status-overlay__bar-fill"></div>
+                </div>
+                <p class="status-overlay__percent">0%</p>
+            </div>
+        </div>
 
-                    <li class="sidebar__menu-child">
-                        <h2 class="sub_title">Raster points</h2>
-                        <section class="sub_settings">
-                            <label for="geopoints_view">view points</label>
-                            <input type="checkbox" id="geopoints_view"  >
-                        </section>
-                        
-                    </li>
+        <section class="sidebar_right">
+            <h1 class="title">Settings</h1>
+            <ul class="sidebar__menu">
+                <li id="dataInfo" class="sidebar__menu-child"></li>
 
-                    <li class="sidebar__menu-child">
-                        <h2 class="sub_title">Parameters</h2>
-                        <section class="sub_settings">
-                            <label for="parameters_wind">wind</label>
-                            <input type="checkbox" id="parameters_wind" unchecked >
-                        </section>
-                        <section class="sub_settings">
-                            <label for="parameters_tempreture">tempreture</label>
-                            <input  type="checkbox" id="parameters_tempreture"  unchecked>
-                        </section>
-                        
-                        <section class="sub_settings">
-                            <label for="parameters_clouds">clouds</label>
-                            <input disabled type="checkbox" id="parameters_clouds" >
-                        </section>
-                    </li>
+                <li class="sidebar__menu-child">
+                    <h2 class="sub_title">wind animation</h2>
+                    <section class="sub_settings">
+                        <label for="particle_tail">tail length <span id="particle_tail-length"></span></label>
+                        <input type="range" id="particle_tail" min="10" max="100" step="10" value="10">
+                    </section>
+                    <section class="sub_settings">
+                        <label for="particle_speed_factor">speed factor <span id="particle_tail-speed"></span></label>
+                        <input type="range" id="particle_speed_factor" min="1" max="100" value="8">
+                    </section>
+                    <section class="sub_settings">
+                        <label for="particle_colorize">colorize</label>
+                        <input type="checkbox" id="particle_colorize">
+                    </section>
+                </li>
 
-                </ul>
-                <footer class="sidebar__footer"><a href="">SMHI</a></footer>
-            </section>
+                <li class="sidebar__menu-child">
+                    <h2 class="sub_title">Raster points</h2>
+                    <section class="sub_settings">
+                        <label for="geopoints_view">view points</label>
+                        <input type="checkbox" id="geopoints_view">
+                    </section>
+                </li>
 
-            <section id="sidebar__scale" class="sidebar__scale">
-                    <p class="scale_unit"> °C </p>
-                    <aside>30</aside>                
-                    <aside>15</aside>                
-                    <aside>10</aside>                
-                    <aside>5</aside>                
-                    <aside>0</aside>                
-                    <aside>-2</aside>                
-                    <aside>-4</aside>                
-            </section>
+                <li class="sidebar__menu-child">
+                    <h2 class="sub_title">Parameters</h2>
+                    <section class="sub_settings">
+                        <label for="parameters_wind">wind</label>
+                        <input type="checkbox" id="parameters_wind" checked>
+                    </section>
+                    <section class="sub_settings">
+                        <label for="parameters_temperature">temperature</label>
+                        <input type="checkbox" id="parameters_temperature">
+                    </section>
+                </li>
+            </ul>
+            <footer class="sidebar__footer"><a href="https://opendata.smhi.se/metfcst/snow1gv1" target="_blank" rel="noopener">SMHI Open Data</a></footer>
+        </section>
 
-            <section id="timeline">
-    
-            </section>
+        <section id="sidebar__scale" class="sidebar__scale"></section>
+        <section id="timeline"></section>
+        <div id="map"></div>
+    </main>
 
-
-
-            <div id="map"></div>
-
-
-        </main>
-
-        <footer>footer</footer>
-
-    
-
-
-
-    <!-- add JS files to the project  -->
-    <script src="js/controls.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/PIXI_methods.js"></script>
-    <script src="js/data.js"></script>
-    <script src="js/helper-functions.js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/bilinearinterpolation.js"></script>
-    <script src="js/textures.js"></script>
-    
-    <!-- Particles Effect parts  -->
-    <script src="js/timeline.js"></script>
-    <script src="js/Fields.js"></script>
-    <script src="js/Particle.js"></script>
-    <script src="js/Emitter.js"></script>
-    <script src="js/HeatMap.js"></script>
-    <script src="js/GeoPoints.js"></script>
-    <script src="js/canvas.js"></script>
-    <script src="js/script.js"></script>
-    <script src="js/color-scale.js"></script>
+    <script type="module" src="js/main.js"></script>
 
 </body>
 
